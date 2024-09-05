@@ -11,10 +11,16 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class CenterAdminDto {
-    private Long id;
+    private Integer id;
     private String username;
     private String password;
     private String email;
+
+//    public CenterAdminDto(Long id, String username, String email) {
+//    }
+
+//    public CenterAdminDto(Integer id, String username, String email, String centerName) {
+//    }
 
 
     public String getEmail() {
@@ -25,13 +31,14 @@ public class CenterAdminDto {
         this.email = email;
     }
 
+    public CenterAdminDto() {
+    }
 
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

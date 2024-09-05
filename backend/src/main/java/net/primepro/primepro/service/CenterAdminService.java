@@ -13,7 +13,7 @@ public interface CenterAdminService {
      LoginResponse loginCenterAdmin(LoginDto loginDto);
 
     CenterAdminDto addCenterAdmin(CenterAdminDto centerAdminDto);
-    void deleteCenterAdmin(Long centeradminId);
+    void deleteCenterAdmin(Integer centeradminId);
     CenterAdminDto editCenterAdmin(CenterAdminDto centerAdminDto);
     List<CenterAdmin> viewAll();
 }

@@ -1,6 +1,5 @@
 package net.primepro.primepro.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,15 +18,20 @@ public class OurUsers implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String email;
-    private String name;
     private String password;
-    private String city;
     private String role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CenterAdmin centerAdmin;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
+
 
     @Override
     public String getUsername() {

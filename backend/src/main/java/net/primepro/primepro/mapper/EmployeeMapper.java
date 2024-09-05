@@ -11,8 +11,12 @@ public class EmployeeMapper {
         return new EmployeeDto(
                 employee.getId(),
                 employee.getUsername(),
-                employee.getPassword(),
-                employee.getEmail()
+                employee.getEmail(),
+                employee.getCenterID(),
+                employee.getNo_of_workdays(),
+                employee.getNo_of_leaves(),
+                employee.getAddress(),
+                employee.getPhoneNo()
         );
 
 
@@ -25,8 +29,13 @@ public class EmployeeMapper {
         return new Employee(
                employeeDto.getId(),
                 employeeDto.getUsername(),
+                employeeDto.getEmail(),
+                employeeDto.getCenterID(),
+                employeeDto.getAddress(),
+                employeeDto.getNo_of_workdays(),
+                employeeDto.getNo_of_leaves(),
                 employeeDto.getPassword(),
-                employeeDto.getEmail()
+                employeeDto.getPhoneNo()
 
         );
     }
