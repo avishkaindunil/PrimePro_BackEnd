@@ -45,7 +45,7 @@ public class Booking {
     }
 
     public void setUserID(Integer userID) {
-        UserID = userID;
+        this.UserID = userID;
     }
 
     public Date getDate() {

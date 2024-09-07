@@ -32,7 +32,7 @@ public class BookingServiceImpl implements BookingService {
         newBooking.setService(booking.getService());
         newBooking.setCarName(booking.getCarName());
 
-        Booking savedBooking=  bookingRepo.save(newBooking);
+        Booking savedBooking=bookingRepo.save(newBooking);
 
         return savedBooking;
 //        bookingDto1.setBooking(newBooking);
