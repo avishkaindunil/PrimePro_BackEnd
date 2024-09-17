@@ -27,7 +27,6 @@ public class UsersManagementService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     public ReqRes register(ReqRes registrationRequest){
         ReqRes resp = new ReqRes();
 
@@ -51,7 +50,6 @@ public class UsersManagementService {
         }
         return resp;
     }
-
 
     public ReqRes login(ReqRes loginRequest){
         ReqRes response = new ReqRes();
@@ -78,10 +76,6 @@ public class UsersManagementService {
         }
         return response;
     }
-
-
-
-
 
     public ReqRes refreshToken(ReqRes refreshTokenReqiest){
         ReqRes response = new ReqRes();
@@ -129,7 +123,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes getUsersById(Integer id) {
+    public ReqRes getUsersById(Long id) {
         ReqRes reqRes = new ReqRes();
         try {
             OurUsers usersById = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
@@ -144,7 +138,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes deleteUser(Integer userId) {
+    public ReqRes deleteUser(Long userId) {
         ReqRes reqRes = new ReqRes();
         try {
             Optional<OurUsers> userOptional = usersRepo.findById(userId);
@@ -163,7 +157,7 @@ public class UsersManagementService {
         return reqRes;
     }
 
-    public ReqRes updateUser(Integer userId, OurUsers updatedUser) {
+    public ReqRes updateUser(Long userId, OurUsers updatedUser) {
         ReqRes reqRes = new ReqRes();
         try {
             Optional<OurUsers> userOptional = usersRepo.findById(userId);

@@ -23,11 +23,10 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public String createEmployee(@RequestBody EmployeeDto employeeDto){
-
+    public boolean createEmployee(@RequestBody EmployeeDto employeeDto){
           employeeService.addEmployee(employeeDto);
-          return "Employee Added";
-
+          System.out.println("Employee Added");
+          return true;
     }
 
     @DeleteMapping("/delete/{id}")
@@ -36,15 +35,20 @@ public class EmployeeController {
         return "Employee deleted";
     }
 
-    @PostMapping("/edit")
-    public String editEmp(@RequestBody EmployeeDto employeeDto){
-        employeeService.editEmployee(employeeDto);
-        return "Employee edited";
-    }
+//    @PostMapping("/edit")
+//    public String editEmp(@RequestBody EmployeeDto employeeDto){
+//        employeeService.editEmployee(employeeDto);
+//        return "Employee edited";
+//    }
 
-    @GetMapping("/get all")
+    @GetMapping("/getEmployees")
     public List<Employee> getAll(){
         return  employeeService.viewAll();
+    }
+
+    @GetMapping("/getEmployee/{id}")
+    public Employee getEmployee(@PathVariable Long id){
+        return employeeService.getEmployee(id);
     }
 
 }
