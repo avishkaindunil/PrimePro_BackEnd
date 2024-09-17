@@ -4,7 +4,6 @@ import net.primepro.primepro.constants.BookingStatusEnum;
 import net.primepro.primepro.dto.AssignEmployeeDto;
 import net.primepro.primepro.dto.CarWashBookingDto;
 import net.primepro.primepro.dto.ChangeStatusDto;
-import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.Task;
 import net.primepro.primepro.service.EmployeeService;
 import net.primepro.primepro.service.TaskService;
@@ -85,4 +84,17 @@ public class TaskController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @GetMapping("/employee/count/{employeeId}")
+    public ResponseEntity<Long> getTaskCountByEmployeeId(@PathVariable Integer employeeId) {
+        Long taskCount = taskService.getTaskCountByEmployeeId(employeeId);
+        return ResponseEntity.ok(taskCount);
+    }
+
+    @GetMapping("/customer/count/{customerId}")
+    public ResponseEntity<Long> getTaskCountByCustomerId(@PathVariable Integer customerId) {
+        Long taskCount = taskService.getTaskCountByCustomerId(customerId);
+        return ResponseEntity.ok(taskCount);
+    }
+
 }

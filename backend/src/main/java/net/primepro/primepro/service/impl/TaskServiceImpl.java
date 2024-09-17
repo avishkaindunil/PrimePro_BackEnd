@@ -98,6 +98,16 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
+    @Override
+    public Long getTaskCountByEmployeeId(Integer employeeId) {
+        return taskRepository.countByEmployeeId(employeeId);
+    }
+
+    @Override
+    public Long getTaskCountByCustomerId(Integer customerId) {
+        return taskRepository.countByCustomerId(customerId);
+    }
+
     private boolean isTaskTimeValidForEmployee(Integer employeeId, Date taskDate, Time startTime, Time endTime) {
         List<Task> existingTasks = taskRepository.findByEmployeeId(employeeId);
 

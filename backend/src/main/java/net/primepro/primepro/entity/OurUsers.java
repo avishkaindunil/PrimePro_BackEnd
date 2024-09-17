@@ -1,6 +1,7 @@
 package net.primepro.primepro.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import net.primepro.primepro.constants.UserTypesEnum;
@@ -35,9 +36,11 @@ public class OurUsers implements UserDetails {
     private boolean isUserActivated = true;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private CenterAdmin centerAdmin;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Employee employee;
 
     @Override

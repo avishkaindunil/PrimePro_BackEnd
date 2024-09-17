@@ -15,4 +15,6 @@ public interface TaskService {
     void deleteTask(Integer taskId);
     Task assignEmployeeToTask(Integer taskId, Integer employeeId);
     Task changeTaskStatus(Integer taskId, BookingStatusEnum newStatus);
+    Long getTaskCountByEmployeeId(Integer employeeId);
+    Long getTaskCountByCustomerId(Integer customerId);
 }

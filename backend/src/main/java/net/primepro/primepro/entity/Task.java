@@ -21,7 +21,7 @@ public class Task {
     private Integer customerId;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
 
     private String taskDescription;

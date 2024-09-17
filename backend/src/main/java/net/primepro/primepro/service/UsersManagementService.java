@@ -125,6 +125,25 @@ public class UsersManagementService {
             response.setName(user.getName());
             response.setCity(user.getCity());
             response.setRefreshToken(refreshToken);
+            response.setProfilePictureUrl(user.getProfilePictureUrl());
+            response.setUserActivated(user.isUserActivated());
+            response.setUserId(user.getId());
+
+            if(user.getRole().equals(UserTypesEnum.EMPLOYEE)){
+                response.setEmployeeId(user.getEmployee().getId());
+                response.setEmployeeNumber(user.getEmployee().getEmployeeId());
+                response.setBranchName(user.getEmployee().getBranchName());
+                response.setDateOfBirth(user.getEmployee().getDateOfBirth());
+                response.setPhoneNumber(user.getEmployee().getPhoneNumber());
+                response.setDesignation(user.getEmployee().getDesignation());
+                response.setNic(user.getEmployee().getNic());
+                response.setNoOfAnnualLeaves(user.getEmployee().getNoOfAnnualLeaves());
+                response.setNoOfCasualLeaves(user.getEmployee().getNoOfCasualLeaves());
+                response.setNoOfCasualLeaves(user.getEmployee().getNoOfMedicalLeaves());
+                response.setBaseSalary(user.getEmployee().getBaseSalary());
+                response.setProbation(user.getEmployee().isProbation());
+            }
+
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully Logged In");
 
