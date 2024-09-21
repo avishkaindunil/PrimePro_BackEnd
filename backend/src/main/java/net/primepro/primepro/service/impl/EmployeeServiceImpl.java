@@ -60,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             Employee existingEmployee = optionalEmployee.get();
             existingEmployee.setEmail(updatedEmployee.getEmail());
             existingEmployee.setName(updatedEmployee.getName());
-            existingEmployee.setPassword(updatedEmployee.getPassword());
+//            existingEmployee.setPassword(updatedEmployee.getPassword());
             existingEmployee.setCity(updatedEmployee.getCity());
             existingEmployee.setRole(updatedEmployee.getRole());
             existingEmployee.setProfilePictureUrl(updatedEmployee.getProfilePictureUrl());
