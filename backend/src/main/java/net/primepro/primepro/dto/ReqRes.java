@@ -3,6 +3,7 @@ package net.primepro.primepro.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.entity.OurUsers;
 import lombok.Data;
 
@@ -21,7 +22,7 @@ public class ReqRes {
     private String expirationTime;
     private String name;
     private String city;
-    private String role;
+    private UserTypesEnum role;
     private String email;
     private String password;
     private OurUsers ourUsers;
