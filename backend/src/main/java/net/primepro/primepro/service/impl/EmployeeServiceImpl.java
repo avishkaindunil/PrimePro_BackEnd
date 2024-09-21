@@ -3,6 +3,7 @@ package net.primepro.primepro.service.impl;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.repository.EmployeeRepository;
 import net.primepro.primepro.repository.UsersRepo;
 import net.primepro.primepro.service.EmployeeService;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee addEmployee(EmployeeDto employeeDto) {
         // Check if the email already exists
         if (usersRepo.findByEmail(employeeDto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new EmailAlreadyExistsException("Email already in use");
         }
         Employee employee = new Employee();
         employee.setEmail(employeeDto.getEmail());
@@ -50,13 +52,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.deleteById(employeeId);
     }
 
-//    @Override
-//    public EmployeeDto editEmployee(EmployeeDto employeeDto) {
-//        Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-//        Employee savedEmployee = employeeRepository.save(employee);
-//
-//        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
-//    }
+    @Override
+    public Employee updateEmployee(Long id, Employee updatedEmployee) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
+        if (optionalEmployee.isPresent()) {
+            Employee existingEmployee = optionalEmployee.get();
+            existingEmployee.setEmail(updatedEmployee.getEmail());
+            existingEmployee.setName(updatedEmployee.getName());
+            existingEmployee.setPassword(updatedEmployee.getPassword());
+            existingEmployee.setCity(updatedEmployee.getCity());
+            existingEmployee.setRole(updatedEmployee.getRole());
+            existingEmployee.setProfilePictureUrl(updatedEmployee.getProfilePictureUrl());
+            existingEmployee.setUserActivated(updatedEmployee.isUserActivated());
+            existingEmployee.setBranchName(updatedEmployee.getBranchName());
+            existingEmployee.setDateOfBirth(updatedEmployee.getDateOfBirth());
+            existingEmployee.setPhoneNumber(updatedEmployee.getPhoneNumber());
+            existingEmployee.setDesignation(updatedEmployee.getDesignation());
+
+            return employeeRepository.save(existingEmployee);  // Save updated employee
+        } else {
+            throw new RuntimeException("Employee not found with ID: " + id);
+        }
+    }
 
     @Override
     public List<Employee> viewAll() {

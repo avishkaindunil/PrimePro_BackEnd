@@ -3,13 +3,16 @@ package net.primepro.primepro.controller;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.service.EmployeeService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.sql.SQLOutput;
 import java.util.List;
 
@@ -23,10 +26,19 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public boolean createEmployee(@RequestBody EmployeeDto employeeDto){
-          employeeService.addEmployee(employeeDto);
-          System.out.println("Employee Added");
-          return true;
+    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto){
+        try {
+            Employee createdEmployee = employeeService.addEmployee(employeeDto);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(createdEmployee.getEmployeeId())
+                    .toUri();
+
+            return ResponseEntity.created(location).body(createdEmployee);
+        } catch (EmailAlreadyExistsException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{id}")
@@ -35,15 +47,15 @@ public class EmployeeController {
         return "Employee deleted";
     }
 
-//    @PostMapping("/edit")
-//    public String editEmp(@RequestBody EmployeeDto employeeDto){
-//        employeeService.editEmployee(employeeDto);
-//        return "Employee edited";
-//    }
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
+        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+        return ResponseEntity.ok(updatedEmployee);
+    }
 
-    @GetMapping("/getEmployees")
+    @GetMapping("/")
     public List<Employee> getAll(){
-        return  employeeService.viewAll();
+        return employeeService.viewAll();
     }
 
     @GetMapping("/getEmployee/{id}")
