@@ -1,11 +1,18 @@
 package net.primepro.primepro.service.impl;
 
+import net.primepro.primepro.constants.BookingStatusEnum;
+import net.primepro.primepro.dto.CarWashBookingDto;
+import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.Task;
+import net.primepro.primepro.repository.EmployeeRepository;
 import net.primepro.primepro.repository.TaskRepository;
 import net.primepro.primepro.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,22 +22,22 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    @Override
-    public Task createTask(Task task) {
-        if (task.getEmployee() == null || task.getEmployee().getId() == null) {
-            throw new IllegalArgumentException("Employee must be provided.");
-        }
-        List<Task> existingTasks = taskRepository.findAll();
-        for (Task existingTask : existingTasks) {
-            if (existingTask.getEmployee().getId().equals(task.getEmployee().getId())) {
-                boolean isOverlapping = task.getStartTime().before(existingTask.getEndTime()) &&
-                        existingTask.getStartTime().before(task.getEndTime());
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-                if (isOverlapping) {
-                    throw new IllegalArgumentException("Task cannot overlap with existing task.");
-                }
-            }
+    @Override
+    public Task createTask(Long customerId, CarWashBookingDto bookingDto) {
+        if (!isTaskTimeValidForCustomer(customerId, bookingDto.getTaskDate(), bookingDto.getStartTime(), bookingDto.getEndTime())) {
+            throw new IllegalArgumentException("The selected time is not available.");
         }
+        Task task = new Task();
+        task.setCustomerId(customerId);
+        task.setTaskDescription(bookingDto.getDescription());
+        task.setTaskDate(bookingDto.getTaskDate());
+        task.setStartTime(bookingDto.getStartTime());
+        task.setEndTime(bookingDto.getEndTime());
+        task.setTaskStatus(BookingStatusEnum.PENDING.toString());
+
         return taskRepository.save(task);
     }
 
@@ -64,4 +71,67 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(Long taskId) {
         taskRepository.deleteById(taskId);
     }
+
+    public Task assignEmployeeToTask(Long taskId, Long employeeId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found."));
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found."));
+
+        if(!isTaskTimeValidForEmployee(employeeId, task.getTaskDate(), task.getStartTime(), task.getEndTime())){
+            throw new IllegalArgumentException("The selected time is not available.");
+        }
+
+        task.setEmployee(employee);
+        task.setTaskStatus(BookingStatusEnum.ASSIGN.toString());
+
+        return taskRepository.save(task);
+    }
+
+    public Task changeTaskStatus(Long taskId, BookingStatusEnum newStatus) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        task.setTaskStatus(newStatus.toString());
+
+        return taskRepository.save(task);
+    }
+
+    private boolean isTaskTimeValidForEmployee(Long employeeId, Date taskDate, Time startTime, Time endTime) {
+        List<Task> existingTasks = taskRepository.findByEmployeeId(employeeId);
+
+        return findValidTaskTime(taskDate, startTime, endTime, existingTasks);
+    }
+
+    private boolean findValidTaskTime(Date taskDate, Time startTime, Time endTime, List<Task> existingTasks) {
+        for (Task existingTask : existingTasks) {
+            if (isSameDay(taskDate, existingTask.getTaskDate())) {
+                boolean isOverlapping = startTime.before(existingTask.getEndTime()) &&
+                        existingTask.getStartTime().before(endTime);
+                if (isOverlapping) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isTaskTimeValidForCustomer(Long customerId, Date taskDate, Time startTime, Time endTime) {
+        List<Task> existingTasks = taskRepository.findByCustomerId(customerId);
+
+        return findValidTaskTime(taskDate, startTime, endTime, existingTasks);
+    }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+
 }
