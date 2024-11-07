@@ -41,6 +41,7 @@ public class UsersManagementService {
 
         try {
             OurUsers ourUser = new OurUsers();
+
             ourUser.setEmail(registrationRequest.getEmail());
             ourUser.setRole(registrationRequest.getRole());
             ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
@@ -50,11 +51,13 @@ public class UsersManagementService {
             if (ourUsersResult.getId() > 0) {
                 if ("ADMIN".equals(registrationRequest.getRole())) {
                     CenterAdminDto centerAdminDto = new CenterAdminDto();
+                    centerAdminDto.setId(ourUsersResult.getId());
                     centerAdminDto.setEmail(registrationRequest.getEmail());
                     centerAdminDto.setPassword(registrationRequest.getPassword());
                     centerAdminService.addCenterAdmin(centerAdminDto);
                 } else if ("EMPLOYEE".equals(registrationRequest.getRole())) {
                     EmployeeDto employeeDto = new EmployeeDto();
+                    employeeDto.setId(ourUsersResult.getId());
                     employeeDto.setEmail(registrationRequest.getEmail());
                     employeeDto.setPassword(registrationRequest.getPassword());
                     employeeDto.setAddress(registrationRequest.getAddress());

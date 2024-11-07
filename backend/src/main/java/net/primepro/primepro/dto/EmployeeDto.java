@@ -26,6 +26,9 @@ public class EmployeeDto {
     public EmployeeDto(Integer id, String username, String email, String centerID, Integer noOfWorkdays, Integer noOfLeaves, String address, String phoneNo) {
     }
 
+    public EmployeeDto() {
+    }
+    
     public String getCenterID() {
         return centerID;
     }
@@ -74,8 +77,7 @@ public class EmployeeDto {
         this.email = email;
     }
 
-    public EmployeeDto() {
-    }
+
 
     public Integer getId() {
         return id;

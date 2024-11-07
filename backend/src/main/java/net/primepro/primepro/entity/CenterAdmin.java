@@ -154,8 +154,8 @@ import lombok.Data;
 import java.util.Date;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
+
 @Entity
 @AllArgsConstructor
 @Table(name = "centerAdmin")
@@ -215,70 +215,79 @@ public class CenterAdmin {
     }
 
     // Getters and setters...
+//
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+//
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
+//
+//    public String getCenterName() {
+//        return centerName;
+//    }
+//
+//    public void setCenterName(String centerName) {
+//        this.centerName = centerName;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
+//
+//    public String getBRNo() {
+//        return BRNo;
+//    }
+//
+//    public void setBRNo(String BRNo) {
+//        this.BRNo = BRNo;
+//    }
+//
+//    public String getPhoneNo() {
+//        return phoneNo;
+//    }
+//
+//    public void setPhoneNo(String phoneNo) {
+//        this.phoneNo = phoneNo;
+//    }
+//
+//    public Date getRegisteredDate() {
+//        return registeredDate;
+//    }
+//
+//    public void setRegisteredDate(Date registeredDate) {
+//        this.registeredDate = registeredDate;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
-    public String getCenterName() {
-        return centerName;
-    }
 
-    public void setCenterName(String centerName) {
-        this.centerName = centerName;
-    }
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
-    public String getBRNo() {
-        return BRNo;
-    }
-
-    public void setBRNo(String BRNo) {
-        this.BRNo = BRNo;
-    }
-
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-    public Date getRegisteredDate() {
-        return registeredDate;
-    }
-
-    public void setRegisteredDate(Date registeredDate) {
-        this.registeredDate = registeredDate;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
 //    public OurUsers getUser() {
 //        return user;
