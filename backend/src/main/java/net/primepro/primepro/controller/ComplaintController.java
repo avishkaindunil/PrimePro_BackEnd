@@ -32,12 +32,12 @@ public class ComplaintController {
     }
 
 
-    @GetMapping("complaints/get-all")
+    @GetMapping("/complaints/get-all")
     public List<Complaints> getAllComplaints(){
         return complaintService.getComplaints();
     }
 
-    @PostMapping("complaints/update/{id}")
+    @PostMapping("/complaints/update/{id}")
     public Complaints updateComplaint(@PathVariable("id") Integer id ,@RequestBody Complaints complaints){
           return complaintService.updateComplaint(id, complaints);
 

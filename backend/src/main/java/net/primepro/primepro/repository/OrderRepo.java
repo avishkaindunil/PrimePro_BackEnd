@@ -1,7 +1,9 @@
 package net.primepro.primepro.repository;
 
-import net.primepro.primepro.entity.Order;
+import net.primepro.primepro.entity.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderRepo extends JpaRepository<Order,Long> {
+@Repository
+public interface OrderRepo extends JpaRepository<Orders,Long> {
 }

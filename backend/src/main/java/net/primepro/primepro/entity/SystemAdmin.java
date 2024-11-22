@@ -6,17 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "inventory")
 @Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class Inventory{
+@Table(name = "systemAdmin")
+public class SystemAdmin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private int quantity;
+    private String email;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private OurUsers user;
+
+
 }

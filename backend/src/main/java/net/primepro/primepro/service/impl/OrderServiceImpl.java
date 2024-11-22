@@ -2,7 +2,7 @@ package net.primepro.primepro.service.impl;
 
 
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.entity.Order;
+import net.primepro.primepro.entity.Orders;
 import net.primepro.primepro.repository.OrderRepo;
 import net.primepro.primepro.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,15 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Order addOrder(Order order) {
-        Order newOrder = new Order();
+    public Orders addOrder(Orders orders) {
+        Orders newOrders = new Orders();
 
-        newOrder.setId(order.getId());
-        newOrder.setOrderDate(order.getOrderDate());
-        newOrder.setStatus(order.getStatus());
-        newOrder.setProducts(order.getProducts());
+        newOrders.setId(orders.getId());
+        newOrders.setOrderDate(orders.getOrderDate());
+        newOrders.setStatus(orders.getStatus());
+        newOrders.setProducts(orders.getProducts());
 
-        return  orderRepo.save(newOrder);
+        return  orderRepo.save(newOrders);
 
     }
 
@@ -38,19 +38,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> viewOrders() {
+    public List<Orders> viewOrders() {
         return orderRepo.findAll();
     }
 
     @Override
-    public Order updateOrder(Long Long, Order order) {
+    public Orders updateOrder(Long Long, Orders orders) {
 
-        order.setOrderDate(order.getOrderDate());
-        order.setId(order.getId());
-        order.setProducts(order.getProducts());
-        order.setStatus(order.getStatus());
+        orders.setOrderDate(orders.getOrderDate());
+        orders.setId(orders.getId());
+        orders.setProducts(orders.getProducts());
+        orders.setStatus(orders.getStatus());
 
-        return orderRepo.save(order);
+        return orderRepo.save(orders);
     }
 
 

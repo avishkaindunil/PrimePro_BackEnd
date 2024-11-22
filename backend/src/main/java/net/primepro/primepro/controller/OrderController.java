@@ -1,7 +1,7 @@
 package net.primepro.primepro.controller;
 
 
-import net.primepro.primepro.entity.Order;
+import net.primepro.primepro.entity.Orders;
 import net.primepro.primepro.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/order/add")
-    public Order add_order(@RequestBody Order order) {
-        return  orderService.addOrder(order);
+    public Orders add_order(@RequestBody Orders orders) {
+        return  orderService.addOrder(orders);
 
     }
 
@@ -28,13 +28,13 @@ public class OrderController {
     }
 
     @GetMapping("/order/get-all")
-    public List<Order> get_all(){
+    public List<Orders> get_all(){
         return orderService.viewOrders();
     }
 
     @PutMapping("/order/update/{id}")
-    public Order updateOrder(@PathVariable("id") Long id,@RequestBody Order order){
-        return  orderService.updateOrder(id, order);
+    public Orders updateOrder(@PathVariable("id") Long id, @RequestBody Orders orders){
+        return  orderService.updateOrder(id, orders);
     }
 
 }

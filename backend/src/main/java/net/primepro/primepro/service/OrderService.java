@@ -1,13 +1,13 @@
 package net.primepro.primepro.service;
 
-import net.primepro.primepro.entity.Order;
+import net.primepro.primepro.entity.Orders;
 
 import java.util.List;
 
 public interface OrderService {
 
-    Order addOrder(Order order);
+    Orders addOrder(Orders orders);
     Long deleteOrder(Long OrderID);
-    List<Order> viewOrders();
-    Order updateOrder(Long Long, Order order);
+    List<Orders> viewOrders();
+    Orders updateOrder(Long Long, Orders orders);
 }

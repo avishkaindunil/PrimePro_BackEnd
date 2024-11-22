@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin
+@CrossOrigin(origins  = "http://localhost:5173/")
 @RestController
 public class UserManagementController {
     @Autowired

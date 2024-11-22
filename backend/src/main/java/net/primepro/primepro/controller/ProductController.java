@@ -1,7 +1,5 @@
 package net.primepro.primepro.controller;
 
-
-import net.primepro.primepro.entity.Order;
 import net.primepro.primepro.entity.Product;
 import net.primepro.primepro.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

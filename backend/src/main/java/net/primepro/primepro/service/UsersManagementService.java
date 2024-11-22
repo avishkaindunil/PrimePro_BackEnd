@@ -7,6 +7,7 @@ import net.primepro.primepro.dto.CenterAdminDto;
 import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.dto.ReqRes;
 import net.primepro.primepro.entity.OurUsers;
+import net.primepro.primepro.entity.SystemAdmin;
 import net.primepro.primepro.repository.UsersRepo;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class UsersManagementService {
     private CenterAdminService centerAdminService;  // Add CenterAdminService
     @Autowired
     private EmployeeService employeeService;  // Add EmployeeService
+    @Autowired
+    private SystemAdminService systemAdminService;
 
     public ReqRes register(ReqRes registrationRequest) {
         ReqRes resp = new ReqRes();
@@ -67,6 +70,13 @@ public class UsersManagementService {
                     employeeDto.setPhoneNo(registrationRequest.getPhoneNo());
                     employeeDto.setUsername(registrationRequest.getUsername());
                     employeeService.addEmployee(employeeDto);
+                } else if ("SYSTEMADMIN".equals(registrationRequest.getRole())) {
+                    SystemAdmin systemAdmin = new SystemAdmin();
+
+                    systemAdmin.setId(ourUsersResult.getId());
+                    systemAdmin.setEmail(registrationRequest.getEmail());
+
+                    systemAdminService.addSystemAdmin(systemAdmin);
                 }
 
                 resp.setOurUsers(ourUsersResult);
