@@ -18,10 +18,11 @@ public class SystemAdmin {
 
     private String email;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "id")
     private OurUsers user;
+
 
 
 }

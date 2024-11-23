@@ -72,12 +72,21 @@ public class UsersManagementService {
                     employeeService.addEmployee(employeeDto);
                 } else if ("SYSTEMADMIN".equals(registrationRequest.getRole())) {
                     SystemAdmin systemAdmin = new SystemAdmin();
+                    // Fetch the associated OurUsers entity
+                    Optional<OurUsers> ourUserOptional = usersRepo.findById(ourUsersResult.getId());
 
-                    systemAdmin.setId(ourUsersResult.getId());
-                    systemAdmin.setEmail(registrationRequest.getEmail());
+                    if (ourUserOptional.isPresent()) {
+                        OurUsers ourUser1 = ourUserOptional.get();
+                        systemAdmin.setId(ourUsersResult.getId()); // Set shared ID
+                        systemAdmin.setEmail(registrationRequest.getEmail());
+                        systemAdmin.setUser(ourUser1); // Associate the user
 
-                    systemAdminService.addSystemAdmin(systemAdmin);
+                        systemAdminService.addSystemAdmin(systemAdmin);
+                    } else {
+                        throw new RuntimeException("OurUsers entity not found for SystemAdmin");
+                    }
                 }
+
 
                 resp.setOurUsers(ourUsersResult);
                 resp.setMessage("Successfully Registered! Wait until you get the Approval");
