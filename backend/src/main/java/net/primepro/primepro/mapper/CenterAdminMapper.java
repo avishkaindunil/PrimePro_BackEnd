@@ -10,8 +10,11 @@ public class CenterAdminMapper {
         return new CenterAdminDto(
                 centerAdmin.getId(),
                 centerAdmin.getUsername(),
-                centerAdmin.getPassword(),
-                centerAdmin.getEmail()
+                centerAdmin.getEmail(),
+                centerAdmin.getCenterName()
+
+
+
         );
     }
 

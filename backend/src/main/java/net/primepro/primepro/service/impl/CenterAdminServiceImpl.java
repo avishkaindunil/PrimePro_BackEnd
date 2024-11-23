@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.CenterAdminDto;
 import net.primepro.primepro.dto.LoginDto;
 import net.primepro.primepro.entity.CenterAdmin;
+import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.mapper.CenterAdminMapper;
 import net.primepro.primepro.repository.CenterAdminRepository;
+import net.primepro.primepro.repository.UsersRepo;
 import net.primepro.primepro.response.LoginResponse;
 import net.primepro.primepro.service.CenterAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class CenterAdminServiceImpl implements CenterAdminService {
 
     private final CenterAdminRepository centerAdminRepository;
+    private UsersRepo usersRepo;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -54,14 +57,28 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     }
 
     @Override
-    public void deleteCenterAdmin(Long centerAdminId) {
+    public void deleteCenterAdmin(Integer centerAdminId) {
+
         centerAdminRepository.deleteById(centerAdminId);
+        usersRepo.deleteById(centerAdminId);
     }
 
     @Override
     public CenterAdminDto editCenterAdmin(CenterAdminDto centerAdminDto) {
-        // Implement the edit functionality
-        return null;
+        CenterAdmin centerAdmin = CenterAdminMapper.mapToCenterAdmin(centerAdminDto, passwordEncoder);
+        CenterAdmin savedAdmin = centerAdminRepository.save(centerAdmin);
+
+        // Update the OurUsers record
+        Optional<OurUsers> ourUserOptional = usersRepo.findById(savedAdmin.getId());
+        if (ourUserOptional.isPresent()) {
+            OurUsers ourUser = ourUserOptional.get();
+            ourUser.setEmail(savedAdmin.getEmail());
+            ourUser.setRole("ADMIN");  // Assuming role is ADMIN
+            usersRepo.save(ourUser);
+        }
+
+        return CenterAdminMapper.mapToCenterAdminDto(savedAdmin);
+
     }
 
     @Override
