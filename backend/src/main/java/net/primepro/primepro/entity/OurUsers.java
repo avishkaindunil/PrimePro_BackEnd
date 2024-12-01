@@ -1,5 +1,6 @@
 package net.primepro.primepro.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 import net.primepro.primepro.constants.UserTypesEnum;
@@ -32,6 +33,12 @@ public class OurUsers implements UserDetails {
 
     @Column(columnDefinition = "boolean default true")
     private boolean isUserActivated = true;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CenterAdmin centerAdmin;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
