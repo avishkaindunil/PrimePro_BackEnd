@@ -8,20 +8,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "inventory")
+@Table(name = "brand")
 @Data
-public class Inventory {
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
-
-    private int quantity;
+    private String name;
 }

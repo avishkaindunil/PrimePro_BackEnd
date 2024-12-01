@@ -5,23 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "inventory")
+@Table(name = "attendance")
 @Data
-public class Inventory {
+public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    private Employee employee;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
-
-    private int quantity;
+    private Date attendanceDate;
+    private Boolean isPresent;
 }

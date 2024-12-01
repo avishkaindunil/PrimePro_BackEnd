@@ -1,14 +1,12 @@
 package net.primepro.primepro.service.impl;
 
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.entity.Employee;
-import net.primepro.primepro.entity.OurUsers;
-import net.primepro.primepro.mapper.EmployeeMapper;
 import net.primepro.primepro.repository.EmployeeRepository;
 import net.primepro.primepro.repository.UsersRepo;
 import net.primepro.primepro.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,41 +22,51 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private UsersRepo usersRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
-    public  EmployeeDto addEmployee(EmployeeDto employeeDto) {
-         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-//
-          Employee savedemployee = employeeRepository.save(employee);
-
-
-        return EmployeeMapper.mapToEmployeeDto(savedemployee);
+    public Employee addEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     @Override
     public void deleteEmployee(Integer employeeId) {
-
         employeeRepository.deleteById(employeeId);
         usersRepo.deleteById(employeeId);
     }
 
     @Override
-    public EmployeeDto editEmployee(EmployeeDto employeeDto) {
-        Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-        Employee savedEmployee = employeeRepository.save(employee);
+    public Employee updateEmployee(Integer id, Employee updatedEmployee) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+//        branch_name
+//                date_of_birth
+//        phone_number
+//                designation
+//        nic
+//                no_of_annual_leaves
+//        No_of_casual_leaves
+//                No_of_medical_leaves
+//        base_salary
+//                is_probation
+        if (optionalEmployee.isPresent()) {
+            Employee existingEmployee = optionalEmployee.get();
+            existingEmployee.setBranchName(updatedEmployee.getBranchName());
+            existingEmployee.setBranchName(updatedEmployee.getBranchName());
+            existingEmployee.setDateOfBirth(updatedEmployee.getDateOfBirth());
+            existingEmployee.setPhoneNumber(updatedEmployee.getPhoneNumber());
+            existingEmployee.setDesignation(updatedEmployee.getDesignation());
+            existingEmployee.setNic(updatedEmployee.getNic());
+            existingEmployee.setNoOfCasualLeaves(updatedEmployee.getNoOfCasualLeaves());
+            existingEmployee.setNoOfAnnualLeaves(updatedEmployee.getNoOfAnnualLeaves());
+            existingEmployee.setNoOfMedicalLeaves(updatedEmployee.getNoOfMedicalLeaves());
+            existingEmployee.setBaseSalary(updatedEmployee.getBaseSalary());
+            existingEmployee.setProbation(updatedEmployee.isProbation());
 
-        Optional<OurUsers> ourUserOptional = usersRepo.findById(savedEmployee.getId());
-        if (ourUserOptional.isPresent()) {
-            OurUsers ourUser = ourUserOptional.get();
-            ourUser.setEmail(savedEmployee.getEmail());
-            ourUser.setRole("EMPLOYEE");  // Assuming role is EMPLOYEE
-            usersRepo.save(ourUser);
+            return employeeRepository.save(existingEmployee);  // Save updated employee
+        } else {
+            throw new RuntimeException("Employee not found with ID: " + id);
         }
-
-
-        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
-
-
-
     }
 
     @Override
@@ -66,6 +74,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll();
     }
 
-
-
+    @Override
+    public Employee getEmployee(Integer id){
+//        log.info("Get {} product from database",id);
+        return employeeRepository.findById(id).get();
+    };
 }
