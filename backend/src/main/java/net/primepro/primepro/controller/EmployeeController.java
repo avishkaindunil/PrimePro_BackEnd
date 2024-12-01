@@ -26,9 +26,9 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto){
+    public ResponseEntity<?> createEmployee(@RequestBody Employee employee){
         try {
-            Employee createdEmployee = employeeService.addEmployee(employeeDto);
+            Employee createdEmployee = employeeService.addEmployee(employee);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
@@ -48,7 +48,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id, @RequestBody Employee employee){
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
@@ -59,7 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getEmployee/{id}")
-    public Employee getEmployee(@PathVariable Long id){
+    public Employee getEmployee(@PathVariable Integer id){
         return employeeService.getEmployee(id);
     }
 

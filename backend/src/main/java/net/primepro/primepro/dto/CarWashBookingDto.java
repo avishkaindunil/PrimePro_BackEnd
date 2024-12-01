@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class CarWashBookingDto {
-    private Long customerId;
+    private Integer customerId;
     private String description;
     private Date taskDate;
     private Time startTime;

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface AttendanceService {
     Attendance markAttendance(Attendance attendance);
-    List<Attendance> getAttendanceByEmployee(Long employeeId);
-    void deleteAttendance(Long attendanceId);
+    List<Attendance> getAttendanceByEmployee(Integer employeeId);
+    void deleteAttendance(Integer attendanceId);
 }

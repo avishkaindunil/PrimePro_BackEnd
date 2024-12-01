@@ -1,7 +1,5 @@
 package net.primepro.primepro.entity;
 
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,72 +20,48 @@ public class Employee {
     @Id
     private Integer id;
 
+    @Column(name = "employee_id")
+    private String employeeId;
+
+    @Column(name = "branch_name")
+    private String branchName;
+
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "designation")
+    private String designation;
+
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name="no_of_annual_leaves")
+    private Integer noOfAnnualLeaves;
+
+    @Column(name="no_of_casual_leaves")
+    private Integer noOfCasualLeaves;
+
+    @Column(name="no_of_medical_leaves")
+    private Integer noOfMedicalLeaves;
+
+    @Column(name="base_salary")
+    private Integer baseSalary;
+
+    @Column(name = "is_probation")
+    private boolean isProbation;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private OurUsers user;
-
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "centerID")
-    private String centerID;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "phoneNo")
-    private String phoneNo;
-
-    @Column(name="No_of_leaves")
-    private Integer No_of_leaves;
-
-    @Column(name="No_of_workdays")
-    private Integer No_of_workdays;
-
-    @Column(name = "email")
-    private String email;
-
-//    @OneToOne
-//    @MapsId
-//    @JoinColumn(name = "id")
-//    private OurUsers user;
-
-
-//    @OneToOne
-//    @MapsId
-//    @JoinColumn(name = "id")
-//    private OurUsers user;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "center_id")
-//    private CenterAdmin centerAdmin;
-
-    public Employee() {
-    }
-
-
-    public Employee(Integer id, String username, String email, String centerID, String address, Integer noOfWorkdays, Integer noOfLeaves, String password, String phoneNo) {
-    }
-
-// Getters and setters...
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 
     @PrePersist
     public void generateEmployeeId() {
         this.employeeId = "EMP-" + UUID.randomUUID().toString();
     }
+
 }
 
 

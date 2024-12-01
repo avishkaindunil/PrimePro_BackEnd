@@ -15,10 +15,10 @@ import java.util.Date;
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
 
     private Date attendanceDate;

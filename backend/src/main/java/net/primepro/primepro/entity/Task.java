@@ -16,9 +16,9 @@ import java.util.Date;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private Long customerId;
+    private Integer customerId;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

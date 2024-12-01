@@ -26,7 +26,7 @@ public class TaskServiceImpl implements TaskService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public Task createTask(Long customerId, CarWashBookingDto bookingDto) {
+    public Task createTask(Integer customerId, CarWashBookingDto bookingDto) {
         if (!isTaskTimeValidForCustomer(customerId, bookingDto.getTaskDate(), bookingDto.getStartTime(), bookingDto.getEndTime())) {
             throw new IllegalArgumentException("The selected time is not available.");
         }
@@ -42,17 +42,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Optional<Task> getTaskById(Long taskId) {
+    public Optional<Task> getTaskById(Integer taskId) {
         return taskRepository.findById(taskId);
     }
 
     @Override
-    public List<Task> getTasksByEmployee(Long employeeId) {
+    public List<Task> getTasksByEmployee(Integer employeeId) {
         return taskRepository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public Task updateTask(Long taskId, Task updatedTask) {
+    public Task updateTask(Integer taskId, Task updatedTask) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         if (optionalTask.isPresent()) {
             Task existingTask = optionalTask.get();
@@ -68,11 +68,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(Long taskId) {
+    public void deleteTask(Integer taskId) {
         taskRepository.deleteById(taskId);
     }
 
-    public Task assignEmployeeToTask(Long taskId, Long employeeId) {
+    public Task assignEmployeeToTask(Integer taskId, Integer employeeId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found."));
 
@@ -89,7 +89,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-    public Task changeTaskStatus(Long taskId, BookingStatusEnum newStatus) {
+    public Task changeTaskStatus(Integer taskId, BookingStatusEnum newStatus) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
@@ -98,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-    private boolean isTaskTimeValidForEmployee(Long employeeId, Date taskDate, Time startTime, Time endTime) {
+    private boolean isTaskTimeValidForEmployee(Integer employeeId, Date taskDate, Time startTime, Time endTime) {
         List<Task> existingTasks = taskRepository.findByEmployeeId(employeeId);
 
         return findValidTaskTime(taskDate, startTime, endTime, existingTasks);
@@ -117,7 +117,7 @@ public class TaskServiceImpl implements TaskService {
         return true;
     }
 
-    private boolean isTaskTimeValidForCustomer(Long customerId, Date taskDate, Time startTime, Time endTime) {
+    private boolean isTaskTimeValidForCustomer(Integer customerId, Date taskDate, Time startTime, Time endTime) {
         List<Task> existingTasks = taskRepository.findByCustomerId(customerId);
 
         return findValidTaskTime(taskDate, startTime, endTime, existingTasks);

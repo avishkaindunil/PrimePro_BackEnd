@@ -7,6 +7,7 @@ import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.entity.OurUsers;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,9 +23,21 @@ public class ReqRes {
     private String expirationTime;
     private String name;
     private String city;
-    private UserTypesEnum role;
+    private String role;
     private String email;
     private String password;
+
+    private String branchName;
+    private Date dateOfBirth;
+    private String phoneNumber;
+    private String designation;
+    private String nic;
+    private Integer noOfAnnualLeaves;
+    private Integer noOfCasualLeaves;
+    private Integer noOfMedicalLeaves;
+    private Integer baseSalary;
+    private boolean isProbation;
+
     private OurUsers ourUsers;
     private List<OurUsers> ourUsersList;
 

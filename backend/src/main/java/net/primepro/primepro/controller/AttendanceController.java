@@ -36,7 +36,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<Attendance>> getAttendanceByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<Attendance>> getAttendanceByEmployee(@PathVariable Integer employeeId) {
         List<Attendance> attendanceList = attendanceService.getAttendanceByEmployee(employeeId);
         return ResponseEntity.ok(attendanceList);
     }

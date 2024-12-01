@@ -38,19 +38,19 @@ public class TaskController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<Task>> getTasksByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<Task>> getTasksByEmployee(@PathVariable Integer employeeId) {
         List<Task> tasks = taskService.getTasksByEmployee(employeeId);
         return ResponseEntity.ok(tasks);
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Integer taskId, @RequestBody Task task) {
         Task updatedTask = taskService.updateTask(taskId, task);
         return ResponseEntity.ok(updatedTask);
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer taskId) {
         taskService.deleteTask(taskId);
         return ResponseEntity.noContent().build();
     }

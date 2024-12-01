@@ -31,12 +31,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<Attendance> getAttendanceByEmployee(Long employeeId) {
+    public List<Attendance> getAttendanceByEmployee(Integer employeeId) {
         return attendanceRepository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public void deleteAttendance(Long attendanceId) {
+    public void deleteAttendance(Integer attendanceId) {
         attendanceRepository.deleteById(attendanceId);
     }
 
