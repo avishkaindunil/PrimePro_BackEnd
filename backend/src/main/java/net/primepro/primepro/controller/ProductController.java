@@ -1,40 +1,25 @@
 package net.primepro.primepro.controller;
 
+import net.primepro.primepro.dto.ProductDto;
 import net.primepro.primepro.entity.Product;
 import net.primepro.primepro.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/product/add")
-    public Product add_booking(@RequestBody Product product) {
-        return  productService.addProduct(product);
-
+    @PostMapping("/add")
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDto productDto) {
+        Product newProduct = productService.addProduct(productDto);
+        return ResponseEntity.ok(newProduct);
     }
-
-    @GetMapping("/product/get-all")
-    public List<Product> getProducts(){
-        return productService.viewProducts();
-    }
-
-    @PutMapping("/product/update/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
-        return productService.updateOrder(id, product);
-    }
-
-    @DeleteMapping("/product/delete/{productID}")
-    public String deleteProduct(@PathVariable Long productID){
-        Long id = productService.deleteProduct(productID);
-        return ("Deleted product"+productID);
-    }
-
-
 }

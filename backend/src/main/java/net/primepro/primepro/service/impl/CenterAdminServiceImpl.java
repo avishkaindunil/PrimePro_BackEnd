@@ -1,6 +1,7 @@
 package net.primepro.primepro.service.impl;
 
 import lombok.AllArgsConstructor;
+import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.dto.CenterAdminDto;
 import net.primepro.primepro.dto.LoginDto;
 import net.primepro.primepro.entity.CenterAdmin;
@@ -73,7 +74,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         if (ourUserOptional.isPresent()) {
             OurUsers ourUser = ourUserOptional.get();
             ourUser.setEmail(savedAdmin.getEmail());
-            ourUser.setRole("ADMIN");  // Assuming role is ADMIN
+            ourUser.setRole(UserTypesEnum.valueOf("ADMIN"));  // Assuming role is ADMIN
             usersRepo.save(ourUser);
         }
 

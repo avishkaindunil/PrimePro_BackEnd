@@ -1,15 +1,16 @@
 package net.primepro.primepro.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import net.primepro.primepro.Config.JWTAuthFilter;
+import jakarta.transaction.Transactional;
+import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.dto.CenterAdminDto;
 import net.primepro.primepro.dto.EmployeeDto;
+import net.primepro.primepro.dto.LoginDto;
 import net.primepro.primepro.dto.ReqRes;
+import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.entity.SystemAdmin;
+import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.repository.UsersRepo;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class UsersManagementService {
@@ -39,14 +39,22 @@ public class UsersManagementService {
     @Autowired
     private SystemAdminService systemAdminService;
 
-    public ReqRes register(ReqRes registrationRequest) {
+    @Transactional
+    public ReqRes register(ReqRes registrationRequest){
+
         ReqRes resp = new ReqRes();
+
+        if (usersRepo.findByEmail(registrationRequest.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already in use");
+        }
 
         try {
             OurUsers ourUser = new OurUsers();
 
             ourUser.setEmail(registrationRequest.getEmail());
-            ourUser.setRole(registrationRequest.getRole());
+            ourUser.setCity(registrationRequest.getCity());
+            ourUser.setRole(UserTypesEnum.valueOf(registrationRequest.getRole()));
+            ourUser.setName(registrationRequest.getName());
             ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             OurUsers ourUsersResult = usersRepo.save(ourUser);
 
@@ -54,21 +62,22 @@ public class UsersManagementService {
             if (ourUsersResult.getId() > 0) {
                 if ("ADMIN".equals(registrationRequest.getRole())) {
                     CenterAdminDto centerAdminDto = new CenterAdminDto();
-                    centerAdminDto.setId(ourUsersResult.getId());
+                    centerAdminDto.setId(Math.toIntExact(ourUsersResult.getId()));
                     centerAdminDto.setEmail(registrationRequest.getEmail());
                     centerAdminDto.setPassword(registrationRequest.getPassword());
                     centerAdminService.addCenterAdmin(centerAdminDto);
                 } else if ("EMPLOYEE".equals(registrationRequest.getRole())) {
-                    EmployeeDto employeeDto = new EmployeeDto();
-                    employeeDto.setId(ourUsersResult.getId());
-                    employeeDto.setEmail(registrationRequest.getEmail());
-                    employeeDto.setPassword(registrationRequest.getPassword());
-                    employeeDto.setAddress(registrationRequest.getAddress());
-                    employeeDto.setCenterID(registrationRequest.getCenterID());
-                    employeeDto.setNo_of_leaves(registrationRequest.getNo_of_leaves());
-                    employeeDto.setNo_of_workdays(registrationRequest.getNo_of_workdays());
-                    employeeDto.setPhoneNo(registrationRequest.getPhoneNo());
-                    employeeDto.setUsername(registrationRequest.getUsername());
+                    Employee employeeDto = new Employee();
+                    employeeDto.setBranchName(registrationRequest.getBranchName());
+                    employeeDto.setDateOfBirth(registrationRequest.getDateOfBirth());
+                    employeeDto.setPhoneNumber(registrationRequest.getPhoneNumber());
+                    employeeDto.setDesignation(registrationRequest.getDesignation());
+                    employeeDto.setNic(registrationRequest.getNic());
+                    employeeDto.setNoOfAnnualLeaves(registrationRequest.getNoOfAnnualLeaves());
+                    employeeDto.setNoOfCasualLeaves(registrationRequest.getNoOfCasualLeaves());
+                    employeeDto.setNoOfCasualLeaves(registrationRequest.getNoOfMedicalLeaves());
+                    employeeDto.setBaseSalary(registrationRequest.getBaseSalary());
+                    employeeDto.setProbation(registrationRequest.isProbation());
                     employeeService.addEmployee(employeeDto);
                 } else if ("SYSTEMADMIN".equals(registrationRequest.getRole())) {
                     SystemAdmin systemAdmin = new SystemAdmin();
@@ -77,7 +86,7 @@ public class UsersManagementService {
 
                     if (ourUserOptional.isPresent()) {
                         OurUsers ourUser1 = ourUserOptional.get();
-                        systemAdmin.setId(ourUsersResult.getId()); // Set shared ID
+                        systemAdmin.setId(Math.toIntExact(ourUsersResult.getId())); // Set shared ID
                         systemAdmin.setEmail(registrationRequest.getEmail());
                         systemAdmin.setUser(ourUser1); // Associate the user
 
@@ -87,14 +96,12 @@ public class UsersManagementService {
                     }
                 }
 
-
                 resp.setOurUsers(ourUsersResult);
                 resp.setMessage("Successfully Registered! Wait until you get the Approval");
                 resp.setStatusCode(200);
-                resp.getToken();
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             resp.setStatusCode(500);
             resp.setError(e.getMessage());
         }
@@ -102,49 +109,7 @@ public class UsersManagementService {
     }
 
 
-
-
-//
-//@Service
-//public class UsersManagementService {
-//
-//    @Autowired
-//    private UsersRepo usersRepo;
-//    @Autowired
-//    private JWTUtils jwtUtils;
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
-//
-//    public ReqRes register(ReqRes registrationRequest){
-//        ReqRes resp = new ReqRes();
-//
-//        try {
-//            OurUsers ourUser = new OurUsers();
-//            ourUser.setEmail(registrationRequest.getEmail());
-//
-//            ourUser.setRole(registrationRequest.getRole());
-//
-//            ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-//            OurUsers ourUsersResult = usersRepo.save(ourUser);
-//            if (ourUsersResult.getId()>0) {
-//                resp.setOurUsers((ourUsersResult));
-//                resp.setMessage("Successfully Registered! Wait until you get the Approval");
-//                resp.setStatusCode(200);
-//                resp.getToken();
-//            }
-//
-//        }catch (Exception e){
-//            resp.setStatusCode(500);
-//            resp.setError(e.getMessage());
-//        }
-//        return resp;
-//    }
-
-
-    public ReqRes login(ReqRes loginRequest){
+    public ReqRes login(LoginDto loginRequest){
         ReqRes response = new ReqRes();
         try {
             authenticationManager
@@ -155,11 +120,13 @@ public class UsersManagementService {
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             response.setStatusCode(200);
             response.setToken(jwt);
-            response.setRole(user.getRole());
+            response.setRole(String.valueOf(user.getRole()));
+            response.setEmail(user.getEmail());
+            response.setName(user.getName());
+            response.setCity(user.getCity());
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully Logged In");
-            response.setEmail(user.getEmail());
 
         }catch (Exception e){
             response.setStatusCode(500);
@@ -259,8 +226,8 @@ public class UsersManagementService {
             if (userOptional.isPresent()) {
                 OurUsers existingUser = userOptional.get();
                 existingUser.setEmail(updatedUser.getEmail());
-
-
+                existingUser.setName(updatedUser.getName());
+                existingUser.setCity(updatedUser.getCity());
                 existingUser.setRole(updatedUser.getRole());
 
                 // Check if password is present in the request

@@ -1,14 +1,14 @@
 package net.primepro.primepro.service;
 
-import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.entity.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
 
-    EmployeeDto addEmployee(EmployeeDto employeeDto);
+    Employee addEmployee(Employee employee);
     void deleteEmployee(Integer employeeId);
-    EmployeeDto editEmployee(EmployeeDto employeeDto);
+    Employee updateEmployee(Integer id, Employee updatedEmployee);
     List<Employee> viewAll();
+    Employee getEmployee(Integer id);
 }
