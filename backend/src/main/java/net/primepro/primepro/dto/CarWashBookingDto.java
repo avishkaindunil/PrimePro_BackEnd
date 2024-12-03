@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.util.Date;
 public class CarWashBookingDto {
     private Integer customerId;
     private String description;
-    private Date taskDate;
+    private LocalDate taskDate;
     private Time startTime;
     private Time endTime;
 }

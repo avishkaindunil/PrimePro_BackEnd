@@ -4,6 +4,7 @@ import net.primepro.primepro.constants.BookingStatusEnum;
 import net.primepro.primepro.dto.AssignEmployeeDto;
 import net.primepro.primepro.dto.CarWashBookingDto;
 import net.primepro.primepro.dto.ChangeStatusDto;
+import net.primepro.primepro.dto.TaskCountByMonth;
 import net.primepro.primepro.entity.Task;
 import net.primepro.primepro.service.EmployeeService;
 import net.primepro.primepro.service.TaskService;
@@ -39,6 +40,12 @@ public class TaskController {
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<List<Task>> getTasksByEmployee(@PathVariable Integer employeeId) {
         List<Task> tasks = taskService.getTasksByEmployee(employeeId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/employee/all/{employeeId}")
+    public ResponseEntity<List<Task>> getAllTasksByEmployee(@PathVariable Integer employeeId) {
+        List<Task> tasks = taskService.getAllTasksByEmployee(employeeId);
         return ResponseEntity.ok(tasks);
     }
 
@@ -95,6 +102,12 @@ public class TaskController {
     public ResponseEntity<Long> getTaskCountByCustomerId(@PathVariable Integer customerId) {
         Long taskCount = taskService.getTaskCountByCustomerId(customerId);
         return ResponseEntity.ok(taskCount);
+    }
+
+    @GetMapping("/employee/fiveMonths/count/{employeeId}")
+    public ResponseEntity<List<TaskCountByMonth>> getTaskCountForLastFiveMonths(@PathVariable Integer employeeId) {
+        List<TaskCountByMonth> taskCountByMonth = taskService.getTaskCountForLastFiveMonths(employeeId);
+        return ResponseEntity.ok(taskCountByMonth);
     }
 
 }

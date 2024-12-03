@@ -2,7 +2,9 @@ package net.primepro.primepro.controller;
 
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeDto;
+import net.primepro.primepro.dto.UserEmployeeDto;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.service.EmployeeService;
 import org.apache.coyote.Response;
@@ -48,8 +50,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id, @RequestBody Employee employee){
-        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+    public ResponseEntity<OurUsers> updateEmployee(@PathVariable Integer id, @RequestBody UserEmployeeDto employee){
+        OurUsers updatedEmployee = employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 
