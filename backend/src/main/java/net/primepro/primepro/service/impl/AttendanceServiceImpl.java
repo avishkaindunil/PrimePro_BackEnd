@@ -1,6 +1,7 @@
 package net.primepro.primepro.service.impl;
 
 import net.primepro.primepro.dto.AttendanceDto;
+import net.primepro.primepro.dto.TotalHoursResponse;
 import net.primepro.primepro.entity.Attendance;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.repository.AttendanceRepository;
@@ -67,6 +68,61 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void deleteAttendance(Integer attendanceId) {
         attendanceRepository.deleteById(attendanceId);
+    }
+
+    @Override
+    public TotalHoursResponse calculateTotalHoursAndOvertimeForCurrentMonth(Integer employeeId) {
+        // Get start and end dates for the current month
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+
+        // Fetch attendance records for the current month
+        List<Attendance> attendanceRecords = attendanceRepository.findByEmployeeIdAndAttendanceDateBetween(
+                employeeId, startDate, endDate
+        );
+
+        long totalWorkMinutes = 0;
+        long totalOvertimeMinutes = 0;
+
+        for (Attendance record : attendanceRecords) {
+            // Calculate working hours (from check-in to check-out)
+            LocalTime checkInTime = record.getCheckInTime().toLocalTime();
+            LocalTime checkOutTime = record.getCheckOutTime().toLocalTime();
+
+            Duration workDuration = Duration.between(checkInTime, checkOutTime);
+            long dailyWorkMinutes = workDuration.toMinutes();
+
+            // Split regular work hours (8 AM to 5 PM) and overtime
+            LocalTime startOfWorkDay = LocalTime.of(8, 0);
+            LocalTime endOfWorkDay = LocalTime.of(17, 0);
+
+            long regularWorkMinutes = 0;
+            long overtimeMinutes = 0;
+
+            if (!checkInTime.isAfter(endOfWorkDay)) {
+                LocalTime effectiveEnd = checkOutTime.isBefore(endOfWorkDay) ? checkOutTime : endOfWorkDay;
+                regularWorkMinutes = Duration.between(
+                        checkInTime.isAfter(startOfWorkDay) ? checkInTime : startOfWorkDay,
+                        effectiveEnd
+                ).toMinutes();
+            }
+
+            if (checkOutTime.isAfter(endOfWorkDay)) {
+                overtimeMinutes = Duration.between(endOfWorkDay, checkOutTime).toMinutes();
+            }
+
+            totalWorkMinutes += regularWorkMinutes;
+            totalOvertimeMinutes += overtimeMinutes;
+        }
+
+        // Convert minutes to hours and minutes
+        long totalWorkHours = totalWorkMinutes / 60;
+        long totalWorkRemainingMinutes = totalWorkMinutes % 60;
+
+        long totalOvertimeHours = totalOvertimeMinutes / 60;
+        long totalOvertimeRemainingMinutes = totalOvertimeMinutes % 60;
+
+        return new TotalHoursResponse((int) totalWorkHours, (int) totalOvertimeHours);
     }
 
     private boolean isSameDay(LocalDate date1, LocalDate date2) {

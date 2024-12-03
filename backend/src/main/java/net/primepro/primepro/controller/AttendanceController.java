@@ -1,6 +1,7 @@
 package net.primepro.primepro.controller;
 
 import net.primepro.primepro.dto.AttendanceDto;
+import net.primepro.primepro.dto.TotalHoursResponse;
 import net.primepro.primepro.entity.Attendance;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.service.AttendanceService;
@@ -31,5 +32,11 @@ public class AttendanceController {
     public ResponseEntity<List<Attendance>> getAttendanceByEmployee(@PathVariable Integer employeeId) {
         List<Attendance> attendanceList = attendanceService.getAttendanceByEmployee(employeeId);
         return ResponseEntity.ok(attendanceList);
+    }
+
+    @GetMapping("/calculate/{employeeId}")
+    public ResponseEntity<?> calculateCurrentMonthHours(@PathVariable Integer employeeId) {
+        TotalHoursResponse response = attendanceService.calculateTotalHoursAndOvertimeForCurrentMonth(employeeId);
+        return ResponseEntity.ok(response);
     }
 }
