@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ChangeStatusDto {
-    private Long taskId;
+    private Integer taskId;
     private String status;
 }

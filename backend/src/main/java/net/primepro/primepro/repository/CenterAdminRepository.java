@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CenterAdminRepository extends JpaRepository<CenterAdmin,Long> {
+public interface CenterAdminRepository extends JpaRepository<CenterAdmin,Integer> {
     Optional<CenterAdmin> findOneByEmailAndPassword(String email, String password);
     CenterAdmin findByEmail(String email);
 

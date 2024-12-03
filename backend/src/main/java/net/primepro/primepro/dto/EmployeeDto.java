@@ -1,14 +1,16 @@
 package net.primepro.primepro.dto;
 
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.primepro.primepro.constants.UserTypesEnum;
 
 import java.util.Date;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
 
 public class EmployeeDto {
