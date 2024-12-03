@@ -3,13 +3,16 @@ package net.primepro.primepro.controller;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeDto;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.service.EmployeeService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.sql.SQLOutput;
 import java.util.List;
 
@@ -23,28 +26,41 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public String createEmployee(@RequestBody EmployeeDto employeeDto){
+    public ResponseEntity<?> createEmployee(@RequestBody Employee employee){
+        try {
+            Employee createdEmployee = employeeService.addEmployee(employee);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(createdEmployee.getEmployeeId())
+                    .toUri();
 
-          employeeService.addEmployee(employeeDto);
-          return "Employee Added";
-
+            return ResponseEntity.created(location).body(createdEmployee);
+        } catch (EmailAlreadyExistsException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteEmp(@PathVariable("id") Long Id){
+    public String deleteEmp(@PathVariable("id") Integer Id){
         employeeService.deleteEmployee(Id);
         return "Employee deleted";
     }
 
-    @PostMapping("/edit")
-    public String editEmp(@RequestBody EmployeeDto employeeDto){
-        employeeService.editEmployee(employeeDto);
-        return "Employee edited";
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id, @RequestBody Employee employee){
+        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+        return ResponseEntity.ok(updatedEmployee);
     }
 
-    @GetMapping("/get all")
+    @GetMapping("/")
     public List<Employee> getAll(){
-        return  employeeService.viewAll();
+        return employeeService.viewAll();
+    }
+
+    @GetMapping("/getEmployee/{id}")
+    public Employee getEmployee(@PathVariable Integer id){
+        return employeeService.getEmployee(id);
     }
 
 }

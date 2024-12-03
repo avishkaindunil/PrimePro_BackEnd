@@ -1,10 +1,16 @@
 package net.primepro.primepro.service;
 
-import net.primepro.primepro.Config.JWTAuthFilter;
+import jakarta.transaction.Transactional;
+import net.primepro.primepro.constants.UserTypesEnum;
+import net.primepro.primepro.dto.CenterAdminDto;
+import net.primepro.primepro.dto.EmployeeDto;
+import net.primepro.primepro.dto.LoginDto;
 import net.primepro.primepro.dto.ReqRes;
+import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.OurUsers;
+import net.primepro.primepro.entity.SystemAdmin;
+import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.repository.UsersRepo;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,22 +32,75 @@ public class UsersManagementService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CenterAdminService centerAdminService;  // Add CenterAdminService
+    @Autowired
+    private EmployeeService employeeService;  // Add EmployeeService
+    @Autowired
+    private SystemAdminService systemAdminService;
 
-
+    @Transactional
     public ReqRes register(ReqRes registrationRequest){
+
         ReqRes resp = new ReqRes();
+
+        if (usersRepo.findByEmail(registrationRequest.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already in use");
+        }
 
         try {
             OurUsers ourUser = new OurUsers();
+
             ourUser.setEmail(registrationRequest.getEmail());
             ourUser.setCity(registrationRequest.getCity());
-            ourUser.setRole(registrationRequest.getRole());
+            ourUser.setRole(UserTypesEnum.valueOf(registrationRequest.getRole()));
             ourUser.setName(registrationRequest.getName());
             ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             OurUsers ourUsersResult = usersRepo.save(ourUser);
-            if (ourUsersResult.getId()>0) {
-                resp.setOurUsers((ourUsersResult));
-                resp.setMessage("User Saved Successfully");
+
+            // Handle different roles
+            if (ourUsersResult.getId() > 0) {
+                if ("ADMIN".equals(registrationRequest.getRole())) {
+                    CenterAdminDto centerAdminDto = new CenterAdminDto();
+                    centerAdminDto.setOurUsers(ourUsersResult);
+                    centerAdminDto.setId(Math.toIntExact(ourUsersResult.getId()));
+                    centerAdminDto.setEmail(registrationRequest.getEmail());
+                    centerAdminDto.setPassword(registrationRequest.getPassword());
+                    centerAdminService.addCenterAdmin(centerAdminDto);
+                } else if ("EMPLOYEE".equals(registrationRequest.getRole())) {
+                    Employee employeeDto = new Employee();
+                    employeeDto.setUser(ourUsersResult);
+                    employeeDto.setId(ourUsersResult.getId());
+                    employeeDto.setBranchName(registrationRequest.getBranchName());
+                    employeeDto.setDateOfBirth(registrationRequest.getDateOfBirth());
+                    employeeDto.setPhoneNumber(registrationRequest.getPhoneNumber());
+                    employeeDto.setDesignation(registrationRequest.getDesignation());
+                    employeeDto.setNic(registrationRequest.getNic());
+                    employeeDto.setNoOfAnnualLeaves(registrationRequest.getNoOfAnnualLeaves());
+                    employeeDto.setNoOfCasualLeaves(registrationRequest.getNoOfCasualLeaves());
+                    employeeDto.setNoOfCasualLeaves(registrationRequest.getNoOfMedicalLeaves());
+                    employeeDto.setBaseSalary(registrationRequest.getBaseSalary());
+                    employeeDto.setProbation(registrationRequest.isProbation());
+                    employeeService.addEmployee(employeeDto);
+                } else if ("SYSTEMADMIN".equals(registrationRequest.getRole())) {
+                    SystemAdmin systemAdmin = new SystemAdmin();
+                    // Fetch the associated OurUsers entity
+                    Optional<OurUsers> ourUserOptional = usersRepo.findById(ourUsersResult.getId());
+
+                    if (ourUserOptional.isPresent()) {
+                        OurUsers ourUser1 = ourUserOptional.get();
+                        systemAdmin.setId(Math.toIntExact(ourUsersResult.getId())); // Set shared ID
+                        systemAdmin.setEmail(registrationRequest.getEmail());
+                        systemAdmin.setUser(ourUser1); // Associate the user
+
+                        systemAdminService.addSystemAdmin(systemAdmin);
+                    } else {
+                        throw new RuntimeException("OurUsers entity not found for SystemAdmin");
+                    }
+                }
+
+                resp.setOurUsers(ourUsersResult);
+                resp.setMessage("Successfully Registered! Wait until you get the Approval");
                 resp.setStatusCode(200);
             }
 
@@ -53,7 +112,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes login(ReqRes loginRequest){
+    public ReqRes login(LoginDto loginRequest){
         ReqRes response = new ReqRes();
         try {
             authenticationManager
@@ -64,8 +123,30 @@ public class UsersManagementService {
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             response.setStatusCode(200);
             response.setToken(jwt);
-            response.setRole(user.getRole());
+            response.setRole(String.valueOf(user.getRole()));
+            response.setEmail(user.getEmail());
+            response.setName(user.getName());
+            response.setCity(user.getCity());
             response.setRefreshToken(refreshToken);
+            response.setProfilePictureUrl(user.getProfilePictureUrl());
+            response.setUserActivated(user.isUserActivated());
+            response.setUserId(user.getId());
+
+            if(user.getRole().equals(UserTypesEnum.EMPLOYEE)){
+                response.setEmployeeId(user.getEmployee().getId());
+                response.setEmployeeNumber(user.getEmployee().getEmployeeId());
+                response.setBranchName(user.getEmployee().getBranchName());
+                response.setDateOfBirth(user.getEmployee().getDateOfBirth());
+                response.setPhoneNumber(user.getEmployee().getPhoneNumber());
+                response.setDesignation(user.getEmployee().getDesignation());
+                response.setNic(user.getEmployee().getNic());
+                response.setNoOfAnnualLeaves(user.getEmployee().getNoOfAnnualLeaves());
+                response.setNoOfCasualLeaves(user.getEmployee().getNoOfCasualLeaves());
+                response.setNoOfCasualLeaves(user.getEmployee().getNoOfMedicalLeaves());
+                response.setBaseSalary(user.getEmployee().getBaseSalary());
+                response.setProbation(user.getEmployee().isProbation());
+            }
+
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully Logged In");
 
