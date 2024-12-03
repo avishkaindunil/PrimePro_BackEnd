@@ -2,7 +2,9 @@ package net.primepro.primepro.controller;
 
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeDto;
+import net.primepro.primepro.dto.UserEmployeeDto;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.exception.EmailAlreadyExistsException;
 import net.primepro.primepro.service.EmployeeService;
 import org.apache.coyote.Response;
@@ -26,9 +28,9 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto){
+    public ResponseEntity<?> createEmployee(@RequestBody Employee employee){
         try {
-            Employee createdEmployee = employeeService.addEmployee(employeeDto);
+            Employee createdEmployee = employeeService.addEmployee(employee);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
@@ -42,14 +44,14 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteEmp(@PathVariable("id") Long Id){
+    public String deleteEmp(@PathVariable("id") Integer Id){
         employeeService.deleteEmployee(Id);
         return "Employee deleted";
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
-        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+    public ResponseEntity<OurUsers> updateEmployee(@PathVariable Integer id, @RequestBody UserEmployeeDto employee){
+        OurUsers updatedEmployee = employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 
@@ -59,7 +61,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getEmployee/{id}")
-    public Employee getEmployee(@PathVariable Long id){
+    public Employee getEmployee(@PathVariable Integer id){
         return employeeService.getEmployee(id);
     }
 

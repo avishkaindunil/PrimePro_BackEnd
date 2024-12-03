@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class AssignEmployeeDto {
-    private Long taskId;
-    private Long employeeId;
+    private Integer taskId;
+    private Integer employeeId;
 }

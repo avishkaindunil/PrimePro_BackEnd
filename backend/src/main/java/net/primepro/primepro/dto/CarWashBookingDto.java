@@ -5,15 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class CarWashBookingDto {
-    private Long customerId;
+    private Integer customerId;
     private String description;
-    private Date taskDate;
+    private LocalDate taskDate;
     private Time startTime;
     private Time endTime;
 }

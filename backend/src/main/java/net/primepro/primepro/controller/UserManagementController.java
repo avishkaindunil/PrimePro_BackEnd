@@ -1,5 +1,8 @@
 package net.primepro.primepro.controller;
 
+import net.primepro.primepro.dto.LoginDto;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import net.primepro.primepro.dto.ReqRes;
 import net.primepro.primepro.entity.OurUsers;
@@ -10,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+
+@CrossOrigin(origins  = "http://localhost:5173/")
 @RestController
 public class UserManagementController {
     @Autowired
@@ -21,7 +26,7 @@ public class UserManagementController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ReqRes> login(@RequestBody ReqRes req){
+    public ResponseEntity<ReqRes> login(@RequestBody LoginDto req){
         return ResponseEntity.ok(usersManagementService.login(req));
     }
 
@@ -37,12 +42,12 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-users/{userId}")
-    public ResponseEntity<ReqRes> getUSerByID(@PathVariable Long userId){
+    public ResponseEntity<ReqRes> getUSerByID(@PathVariable Integer userId){
         return ResponseEntity.ok(usersManagementService.getUsersById(userId));
     }
 
     @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Long userId, @RequestBody OurUsers reqres){
+    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody OurUsers reqres){
         return ResponseEntity.ok(usersManagementService.updateUser(userId, reqres));
     }
 
@@ -55,9 +60,12 @@ public class UserManagementController {
     }
 
     @DeleteMapping("/admin/delete/{userId}")
-    public ResponseEntity<ReqRes> deleteUSer(@PathVariable Long userId){
+    public ResponseEntity<ReqRes> deleteUSer(@PathVariable Integer userId){
         return ResponseEntity.ok(usersManagementService.deleteUser(userId));
     }
 
 
 }
+
+
+//@CrossOrigin(origins  = "http://localhost:5173/")

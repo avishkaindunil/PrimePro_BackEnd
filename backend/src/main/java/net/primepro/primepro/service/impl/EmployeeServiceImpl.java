@@ -1,9 +1,10 @@
 package net.primepro.primepro.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.dto.EmployeeDto;
+import net.primepro.primepro.dto.UserEmployeeDto;
 import net.primepro.primepro.entity.Employee;
-import net.primepro.primepro.exception.EmailAlreadyExistsException;
+import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.repository.EmployeeRepository;
 import net.primepro.primepro.repository.UsersRepo;
 import net.primepro.primepro.service.EmployeeService;
@@ -28,53 +29,61 @@ public class EmployeeServiceImpl implements EmployeeService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Employee addEmployee(EmployeeDto employeeDto) {
-        // Check if the email already exists
-        if (usersRepo.findByEmail(employeeDto.getEmail()).isPresent()) {
-            throw new EmailAlreadyExistsException("Email already in use");
-        }
-        Employee employee = new Employee();
-        employee.setEmail(employeeDto.getEmail());
-        employee.setName(employeeDto.getName());
-        employee.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
-        employee.setCity(employeeDto.getCity());
-        employee.setRole(employeeDto.getRole());
-        employee.setBranchName(employeeDto.getBranchName());
-        employee.setDateOfBirth(employeeDto.getDateOfBirth());
-        employee.setPhoneNumber(employeeDto.getPhoneNumber());
-        employee.setDesignation(employeeDto.getDesignation());
-
+    public Employee addEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
     @Override
-    public void deleteEmployee(Long employeeId) {
+    public void deleteEmployee(Integer employeeId) {
         employeeRepository.deleteById(employeeId);
+        usersRepo.deleteById(employeeId);
     }
 
     @Override
-    public Employee updateEmployee(Long id, Employee updatedEmployee) {
+    @Transactional
+    public OurUsers updateEmployee(Integer id, UserEmployeeDto updatedEmployee) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
         if (optionalEmployee.isPresent()) {
             Employee existingEmployee = optionalEmployee.get();
-            existingEmployee.setEmail(updatedEmployee.getEmail());
-            existingEmployee.setName(updatedEmployee.getName());
-//            existingEmployee.setPassword(updatedEmployee.getPassword());
-            existingEmployee.setCity(updatedEmployee.getCity());
-            existingEmployee.setRole(updatedEmployee.getRole());
-            existingEmployee.setProfilePictureUrl(updatedEmployee.getProfilePictureUrl());
-            existingEmployee.setUserActivated(updatedEmployee.isUserActivated());
-            existingEmployee.setBranchName(updatedEmployee.getBranchName());
             existingEmployee.setDateOfBirth(updatedEmployee.getDateOfBirth());
             existingEmployee.setPhoneNumber(updatedEmployee.getPhoneNumber());
-            existingEmployee.setDesignation(updatedEmployee.getDesignation());
 
-            return employeeRepository.save(existingEmployee);  // Save updated employee
+            Employee saveEmployee = employeeRepository.save(existingEmployee);
+
+            Optional<OurUsers> optionalUser = usersRepo.findById(saveEmployee.getUser().getId());
+            OurUsers existingUser = optionalUser.get();
+
+            existingUser.setName(updatedEmployee.getName());
+            existingUser.setProfilePictureUrl(updatedEmployee.getProfilePictureUrl());
+
+            return usersRepo.save(existingUser);
         } else {
             throw new RuntimeException("Employee not found with ID: " + id);
         }
     }
+
+//    public Employee updateEmployee(Integer id, UserEmployeeDto updatedEmployee) {
+//        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+//        if (optionalEmployee.isPresent()) {
+//            Employee existingEmployee = optionalEmployee.get();
+//            existingEmployee.setBranchName(updatedEmployee.getBranchName());
+//            existingEmployee.setBranchName(updatedEmployee.getBranchName());
+//            existingEmployee.setDateOfBirth(updatedEmployee.getDateOfBirth());
+//            existingEmployee.setPhoneNumber(updatedEmployee.getPhoneNumber());
+//            existingEmployee.setDesignation(updatedEmployee.getDesignation());
+//            existingEmployee.setNic(updatedEmployee.getNic());
+//            existingEmployee.setNoOfCasualLeaves(updatedEmployee.getNoOfCasualLeaves());
+//            existingEmployee.setNoOfAnnualLeaves(updatedEmployee.getNoOfAnnualLeaves());
+//            existingEmployee.setNoOfMedicalLeaves(updatedEmployee.getNoOfMedicalLeaves());
+//            existingEmployee.setBaseSalary(updatedEmployee.getBaseSalary());
+//            existingEmployee.setProbation(updatedEmployee.isProbation());
+//
+//            return employeeRepository.save(existingEmployee);  // Save updated employee
+//        } else {
+//            throw new RuntimeException("Employee not found with ID: " + id);
+//        }
+//    }
 
     @Override
     public List<Employee> viewAll() {
@@ -82,7 +91,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployee(Long id){
+    public Employee getEmployee(Integer id){
 //        log.info("Get {} product from database",id);
         return employeeRepository.findById(id).get();
     };

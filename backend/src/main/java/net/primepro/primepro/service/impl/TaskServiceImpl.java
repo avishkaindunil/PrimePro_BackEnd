@@ -2,6 +2,7 @@ package net.primepro.primepro.service.impl;
 
 import net.primepro.primepro.constants.BookingStatusEnum;
 import net.primepro.primepro.dto.CarWashBookingDto;
+import net.primepro.primepro.dto.TaskCountByMonth;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.Task;
 import net.primepro.primepro.repository.EmployeeRepository;
@@ -11,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -26,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public Task createTask(Long customerId, CarWashBookingDto bookingDto) {
+    public Task createTask(Integer customerId, CarWashBookingDto bookingDto) {
         if (!isTaskTimeValidForCustomer(customerId, bookingDto.getTaskDate(), bookingDto.getStartTime(), bookingDto.getEndTime())) {
             throw new IllegalArgumentException("The selected time is not available.");
         }
@@ -36,23 +35,30 @@ public class TaskServiceImpl implements TaskService {
         task.setTaskDate(bookingDto.getTaskDate());
         task.setStartTime(bookingDto.getStartTime());
         task.setEndTime(bookingDto.getEndTime());
-        task.setTaskStatus(BookingStatusEnum.PENDING.toString());
+        task.setTaskStatus(BookingStatusEnum.ACCEPTED.toString());
 
         return taskRepository.save(task);
     }
 
     @Override
-    public Optional<Task> getTaskById(Long taskId) {
+    public Optional<Task> getTaskById(Integer taskId) {
         return taskRepository.findById(taskId);
     }
 
+
+
     @Override
-    public List<Task> getTasksByEmployee(Long employeeId) {
+    public List<Task> getTasksByEmployee(Integer employeeId) {
+        return taskRepository.findTaskByEmployeeIdAndDate(employeeId);
+    }
+
+    @Override
+    public List<Task> getAllTasksByEmployee(Integer employeeId) {
         return taskRepository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public Task updateTask(Long taskId, Task updatedTask) {
+    public Task updateTask(Integer taskId, Task updatedTask) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         if (optionalTask.isPresent()) {
             Task existingTask = optionalTask.get();
@@ -68,11 +74,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(Long taskId) {
+    public void deleteTask(Integer taskId) {
         taskRepository.deleteById(taskId);
     }
 
-    public Task assignEmployeeToTask(Long taskId, Long employeeId) {
+    public Task assignEmployeeToTask(Integer taskId, Integer employeeId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found."));
 
@@ -89,7 +95,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-    public Task changeTaskStatus(Long taskId, BookingStatusEnum newStatus) {
+    public Task changeTaskStatus(Integer taskId, BookingStatusEnum newStatus) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
@@ -98,13 +104,53 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-    private boolean isTaskTimeValidForEmployee(Long employeeId, Date taskDate, Time startTime, Time endTime) {
+    @Override
+    public Long getTaskCountByEmployeeId(Integer employeeId) {
+        return taskRepository.countByEmployerIdAndStartDateToday(employeeId);
+    }
+
+    @Override
+    public Long getTaskCountByCustomerId(Integer customerId) {
+        return taskRepository.countByCustomerIdAndStartDateToday(customerId);
+    }
+
+    @Override
+    public List<TaskCountByMonth> getTaskCountForLastFiveMonths(Integer employeeId) {
+        List<LocalDate> lastFiveMonths = getLastFiveMonths();
+        List<TaskCountByMonth> taskCounts = new ArrayList<>();
+
+        Collections.reverse(lastFiveMonths);
+
+        for (LocalDate monthStart : lastFiveMonths) {
+            LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
+            List<Object[]> result = taskRepository.countTasksByMonth(monthStart, monthEnd, employeeId);
+
+            Long taskCount = 0L;
+
+            if (!result.isEmpty()) {
+                Object[] row = result.get(0);
+                taskCount = (Long) row[1];
+            }
+
+            int year = monthStart.getYear();
+            int month = monthStart.getMonthValue();
+
+            String monthName = monthStart.getMonth().name();
+            monthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1).toLowerCase();
+
+            taskCounts.add(new TaskCountByMonth(year, monthName, taskCount));
+        }
+
+        return taskCounts;
+    }
+
+    private boolean isTaskTimeValidForEmployee(Integer employeeId, LocalDate taskDate, Time startTime, Time endTime) {
         List<Task> existingTasks = taskRepository.findByEmployeeId(employeeId);
 
         return findValidTaskTime(taskDate, startTime, endTime, existingTasks);
     }
 
-    private boolean findValidTaskTime(Date taskDate, Time startTime, Time endTime, List<Task> existingTasks) {
+    private boolean findValidTaskTime(LocalDate taskDate, Time startTime, Time endTime, List<Task> existingTasks) {
         for (Task existingTask : existingTasks) {
             if (isSameDay(taskDate, existingTask.getTaskDate())) {
                 boolean isOverlapping = startTime.before(existingTask.getEndTime()) &&
@@ -117,21 +163,28 @@ public class TaskServiceImpl implements TaskService {
         return true;
     }
 
-    private boolean isTaskTimeValidForCustomer(Long customerId, Date taskDate, Time startTime, Time endTime) {
+    private boolean isTaskTimeValidForCustomer(Integer customerId, LocalDate taskDate, Time startTime, Time endTime) {
         List<Task> existingTasks = taskRepository.findByCustomerId(customerId);
 
         return findValidTaskTime(taskDate, startTime, endTime, existingTasks);
     }
 
-    private boolean isSameDay(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(date1);
-        cal2.setTime(date2);
+    private boolean isSameDay(LocalDate date1, LocalDate date2) {
+        return date1.equals(date2);
+    }
 
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    private List<LocalDate> getLastFiveMonths() {
+        LocalDate currentDate = LocalDate.now();
+        List<LocalDate> lastFiveMonths = new ArrayList<>();
+
+        lastFiveMonths.add(currentDate.withDayOfMonth(1));
+
+        for (int i = 1; i < 5; i++) {
+            LocalDate previousMonth = currentDate.minusMonths(i).withDayOfMonth(1);
+            lastFiveMonths.add(previousMonth);
+        }
+
+        return lastFiveMonths;
     }
 
 }
