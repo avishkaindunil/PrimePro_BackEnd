@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class Attendance {
     @JsonIgnore
     private Employee employee;
 
-    private Date attendanceDate;
+    private LocalDate attendanceDate;
     private Time checkInTime;
     private Time checkOutTime;
     private Integer overtime;

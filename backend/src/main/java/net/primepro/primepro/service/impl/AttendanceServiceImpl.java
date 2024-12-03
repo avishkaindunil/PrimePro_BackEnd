@@ -45,9 +45,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         AttendanceDto attendanceDto = calculateWorkAndOvertime(attendance);
 
         Attendance attendanceData = new Attendance();
-        LocalDateTime localDateTime = attendanceDto.getAttendanceDate().atStartOfDay();
-        attendanceData.setAttendanceDate(Date.from(localDateTime
-                .atZone(ZoneId.systemDefault()).toInstant()));
+//        LocalDateTime localDateTime = attendanceDto.getAttendanceDate().atStartOfDay();
+//        attendanceData.setAttendanceDate(Date.from(localDateTime
+//                .atZone(ZoneId.systemDefault()).toInstant()));
+        attendanceData.setAttendanceDate(attendanceDto.getAttendanceDate());
         attendanceData.setCheckInTime(attendanceDto.getCheckInTime());
         attendanceData.setCheckOutTime(attendanceDto.getCheckOutTime());
         attendanceData.setWorkHours(attendanceDto.getWorkHours());
@@ -68,9 +69,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceRepository.deleteById(attendanceId);
     }
 
-    private boolean isSameDay(Date date1, LocalDate date2) {
-        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return date2.equals(localDate1);
+    private boolean isSameDay(LocalDate date1, LocalDate date2) {
+//        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date2.equals(date1);
     }
 
     private AttendanceDto calculateWorkAndOvertime(AttendanceDto attendance) {
