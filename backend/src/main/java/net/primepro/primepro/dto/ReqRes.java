@@ -26,7 +26,12 @@ public class ReqRes {
     private String role;
     private String email;
     private String password;
+    private String profilePictureUrl;
+    private boolean isUserActivated;
 
+    private Integer userId;
+    private Integer employeeId;
+    private String employeeNumber;
     private String branchName;
     private Date dateOfBirth;
     private String phoneNumber;

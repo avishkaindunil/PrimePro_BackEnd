@@ -1,5 +1,7 @@
 package net.primepro.primepro.controller;
 
+import net.primepro.primepro.dto.AttendanceDto;
+import net.primepro.primepro.dto.TotalHoursResponse;
 import net.primepro.primepro.entity.Attendance;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.service.AttendanceService;
@@ -16,18 +18,9 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    @Autowired
-    private EmployeeService employeeService;
-
     @PostMapping("/mark")
-    public ResponseEntity<?> markAttendance(@RequestBody Attendance attendance) {
+    public ResponseEntity<?> markAttendance(@RequestBody AttendanceDto attendance) {
         try {
-            Employee employee = employeeService.getEmployee(attendance.getEmployee().getId());
-            if (employee == null) {
-                return ResponseEntity.badRequest().body("Employee not found");
-            }
-
-            attendance.setEmployee(employee);
             Attendance markedAttendance = attendanceService.markAttendance(attendance);
             return ResponseEntity.ok(markedAttendance);
         } catch (IllegalArgumentException ex) {
@@ -39,5 +32,11 @@ public class AttendanceController {
     public ResponseEntity<List<Attendance>> getAttendanceByEmployee(@PathVariable Integer employeeId) {
         List<Attendance> attendanceList = attendanceService.getAttendanceByEmployee(employeeId);
         return ResponseEntity.ok(attendanceList);
+    }
+
+    @GetMapping("/calculate/{employeeId}")
+    public ResponseEntity<?> calculateCurrentMonthHours(@PathVariable Integer employeeId) {
+        TotalHoursResponse response = attendanceService.calculateTotalHoursAndOvertimeForCurrentMonth(employeeId);
+        return ResponseEntity.ok(response);
     }
 }
