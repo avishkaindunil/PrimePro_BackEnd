@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class Task {
     @JoinColumn(name = "booking_id", referencedColumnName = "bookingId")
     private Booking booking;
     private String taskDescription;
-    private Date taskDate;
+    private LocalDate taskDate;
     private Time startTime;
     private Time endTime;
     private String taskStatus;
