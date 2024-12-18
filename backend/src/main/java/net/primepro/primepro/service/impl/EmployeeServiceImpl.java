@@ -1,6 +1,5 @@
 package net.primepro.primepro.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.UserEmployeeDto;
 import net.primepro.primepro.entity.Employee;
@@ -11,6 +10,7 @@ import net.primepro.primepro.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

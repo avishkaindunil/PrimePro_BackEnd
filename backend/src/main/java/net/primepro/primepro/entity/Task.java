@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -26,7 +25,9 @@ public class Task {
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @JsonIgnore
     private Employee employee;
-
+    @OneToOne
+    @JoinColumn(name = "booking_id", referencedColumnName = "bookingId")
+    private Booking booking;
     private String taskDescription;
     private LocalDate taskDate;
     private Time startTime;
