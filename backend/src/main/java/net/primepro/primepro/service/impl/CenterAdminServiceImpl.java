@@ -1,6 +1,5 @@
 package net.primepro.primepro.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.dto.CenterAdminDto;
@@ -16,6 +15,7 @@ import net.primepro.primepro.service.CenterAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.time.LocalDate;

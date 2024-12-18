@@ -62,15 +62,12 @@ public class UsersManagementService {
             if (ourUsersResult.getId() > 0) {
                 if ("ADMIN".equals(registrationRequest.getRole())) {
                     CenterAdminDto centerAdminDto = new CenterAdminDto();
-                    centerAdminDto.setOurUsers(ourUsersResult);
                     centerAdminDto.setId(Math.toIntExact(ourUsersResult.getId()));
                     centerAdminDto.setEmail(registrationRequest.getEmail());
                     centerAdminDto.setPassword(registrationRequest.getPassword());
                     centerAdminService.addCenterAdmin(centerAdminDto);
                 } else if ("EMPLOYEE".equals(registrationRequest.getRole())) {
                     Employee employeeDto = new Employee();
-                    employeeDto.setUser(ourUsersResult);
-                    employeeDto.setId(ourUsersResult.getId());
                     employeeDto.setBranchName(registrationRequest.getBranchName());
                     employeeDto.setDateOfBirth(registrationRequest.getDateOfBirth());
                     employeeDto.setPhoneNumber(registrationRequest.getPhoneNumber());
@@ -112,7 +109,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes login(LoginDto loginRequest){
+    public ReqRes login(ReqRes loginRequest){
         ReqRes response = new ReqRes();
         try {
             authenticationManager

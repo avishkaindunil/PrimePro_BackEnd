@@ -1,5 +1,6 @@
 package net.primepro.primepro.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @JsonIgnore
     private Employee employee;
     @OneToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "bookingId")
