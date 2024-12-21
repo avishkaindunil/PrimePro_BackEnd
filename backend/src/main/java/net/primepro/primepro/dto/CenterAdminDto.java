@@ -2,6 +2,7 @@ package net.primepro.primepro.dto;
 
 
 import lombok.*;
+import net.primepro.primepro.entity.OurUsers;
 
 @Data
 
@@ -13,8 +14,11 @@ public class CenterAdminDto {
     private String username;
     private String password;
     private String email;
+    private OurUsers ourUsers;
 
 
+    public CenterAdminDto(Integer id, String username, String email, String centerName) {
+    }
 }
 //    public CenterAdminDto(Integer id, String username, String email, String centerName) {
 //    }

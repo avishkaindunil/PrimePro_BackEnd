@@ -109,7 +109,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes login(LoginDto loginRequest){
+    public ReqRes login(ReqRes loginRequest){
         ReqRes response = new ReqRes();
         try {
             authenticationManager

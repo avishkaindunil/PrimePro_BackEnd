@@ -11,10 +11,10 @@ import java.util.Date;
 
 @Getter
 @Setter
-@AllArgsConstructor
 
 public class EmployeeDto {
 //    private Long id;
+    private int id;
     private String email;
     private String name;
     private String password;
