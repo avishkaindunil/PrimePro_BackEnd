@@ -1,6 +1,7 @@
 package net.primepro.primepro.service.impl;
 
 import lombok.AllArgsConstructor;
+import net.primepro.primepro.constants.BookingStatusEnum;
 import net.primepro.primepro.constants.UserTypesEnum;
 import net.primepro.primepro.dto.CenterAdminDto;
 import net.primepro.primepro.dto.EmployeeDto;
@@ -293,7 +294,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         String responseMsz = null;
         try {
             Task task = new Task();
-            task.setTaskStatus("Accepted");
+            task.setTaskStatus(String.valueOf(BookingStatusEnum.ACCEPTED));
             Optional<Booking> booking = bookingRepo.findById(taskDto.getBookingId());
             Optional<Employee> employee =  employeeRepository.findById(taskDto.getEmployeeId());
             task.setBooking(booking.get());
