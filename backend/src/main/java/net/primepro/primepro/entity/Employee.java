@@ -18,6 +18,7 @@ import java.util.UUID;
 public class Employee {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "employee_id")
@@ -53,7 +54,7 @@ public class Employee {
     @Column(name = "is_probation")
     private boolean isProbation;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private OurUsers user;
 
