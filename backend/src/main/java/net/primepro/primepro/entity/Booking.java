@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.sql.Time;
 import java.util.Date;
 
 @Entity
@@ -20,6 +21,7 @@ public class Booking {
     private Date date;
     private String carName;
     private String service;
+    private boolean isTaskAssigned;
 
     public Booking() {
     }

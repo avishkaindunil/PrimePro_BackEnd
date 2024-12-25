@@ -13,7 +13,14 @@ import java.util.List;
 public interface AttendanceRepository extends JpaRepository<Attendance, Integer> {
     List<Attendance> findByEmployeeId(Integer id);
 
-    @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId ORDER BY a.attendanceDate DESC")
+    @Query("""
+        SELECT a 
+        FROM Attendance a 
+        WHERE a.employee.id = :employeeId 
+          AND YEAR(a.attendanceDate) = YEAR(CURRENT_DATE) 
+          AND MONTH(a.attendanceDate) = MONTH(CURRENT_DATE)
+        ORDER BY a.attendanceDate DESC
+    """)
     List<Attendance> findByEmployeeIdOrderedByDateDesc(@Param("employeeId") Integer employeeId);
 
     @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId AND a.attendanceDate BETWEEN :startDate AND :endDate")

@@ -109,7 +109,7 @@ public class UsersManagementService {
     }
 
 
-    public ReqRes login(LoginDto loginRequest){
+    public ReqRes login(ReqRes loginRequest){
         ReqRes response = new ReqRes();
         try {
             authenticationManager
@@ -139,7 +139,7 @@ public class UsersManagementService {
                 response.setNic(user.getEmployee().getNic());
                 response.setNoOfAnnualLeaves(user.getEmployee().getNoOfAnnualLeaves());
                 response.setNoOfCasualLeaves(user.getEmployee().getNoOfCasualLeaves());
-                response.setNoOfCasualLeaves(user.getEmployee().getNoOfMedicalLeaves());
+                response.setNoOfMedicalLeaves(user.getEmployee().getNoOfMedicalLeaves());
                 response.setBaseSalary(user.getEmployee().getBaseSalary());
                 response.setProbation(user.getEmployee().isProbation());
             }
