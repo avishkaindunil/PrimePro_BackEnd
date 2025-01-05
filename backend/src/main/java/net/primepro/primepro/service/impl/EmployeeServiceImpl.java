@@ -30,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(Employee employee) {
+        employee.getUser().setPassword(passwordEncoder.encode(employee.getUser().getPassword()));
         return employeeRepository.save(employee);
     }
 
