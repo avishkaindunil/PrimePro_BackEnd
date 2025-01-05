@@ -1,5 +1,6 @@
 package net.primepro.primepro.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +20,11 @@ public class Booking {
     private String centerName;
     private Integer UserID;
     private Date date;
+    private Time time;
     private String carName;
     private String service;
     private boolean isTaskAssigned;
-
+    private boolean isTimeConfirmed;
     public Booking() {
     }
 }

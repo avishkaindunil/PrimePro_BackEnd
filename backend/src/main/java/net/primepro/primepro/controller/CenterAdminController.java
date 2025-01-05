@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -85,5 +86,26 @@ public class CenterAdminController {
     public ResponseEntity<List<BookingResponse>> getTodayAllBookings(){
         List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
         return ResponseEntity.ok(bookingResponses);
+    }
+
+    // New Development
+    @GetMapping("/not-time-allocated")
+    public ResponseEntity<List<Booking>> getBookingsWithoutTimeAllocation() {
+        List<Booking> bookings = centerAdminService.getBookingsWithoutTimeAllocation();
+        return ResponseEntity.ok(bookings);
+    }
+
+    @PostMapping("/allocate-time/{bookingId}")
+    public ResponseEntity<Booking> allocateTime(
+            @PathVariable Integer bookingId,
+            @RequestParam String startTime) {
+        try {
+            // Convert string time to SQL Time
+            Time time = Time.valueOf(startTime + ":00");
+            Booking updatedBooking = centerAdminService.allocateTime(bookingId, time);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

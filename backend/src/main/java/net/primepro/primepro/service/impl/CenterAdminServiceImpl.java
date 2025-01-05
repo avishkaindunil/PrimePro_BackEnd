@@ -33,12 +33,10 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     private final CenterAdminRepository centerAdminRepository;
     private UsersRepo usersRepo;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private BookingRepo bookingRepo;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private TaskRepository taskRepository;
+    @Autowired private BookingRepo bookingRepo;
+    @Autowired private EmployeeRepository employeeRepository;
+    @Autowired private TaskRepository taskRepository;
+
 
     @Override
     public LoginResponse loginCenterAdmin(LoginDto loginDto) {
@@ -322,4 +320,20 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     }
 
 
+    // New development
+    public List<Booking> getBookingsWithoutTimeAllocation() {
+        return centerAdminRepository.findBookingsWithoutTimeAllocation();
+    }
+
+    public Booking allocateTime(Integer bookingId, Time startTime) {
+        Optional<Booking> bookingOptional = bookingRepo.findById(bookingId);
+        if (bookingOptional.isEmpty()) {
+            throw new IllegalArgumentException("Booking not found with id: " + bookingId);
+        }
+
+        Booking booking = bookingOptional.get();
+        booking.setTime(startTime);
+        booking.setTimeConfirmed(true);
+        return bookingRepo.save(booking);
+    }
 }

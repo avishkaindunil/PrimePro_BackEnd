@@ -10,6 +10,7 @@ import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.response.BookingResponse;
 import net.primepro.primepro.response.LoginResponse;
 
+import java.sql.Time;
 import java.util.List;
 
 public interface CenterAdminService {
@@ -36,4 +37,9 @@ public interface CenterAdminService {
     String assignTasks(TaskDto taskDto);
 
     String getCenter(int centerId);
+
+    // New development
+    List<Booking> getBookingsWithoutTimeAllocation();
+
+    Booking allocateTime(Integer bookingId, Time time);
 }
