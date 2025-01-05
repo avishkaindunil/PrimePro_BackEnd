@@ -64,7 +64,7 @@ public class CenterAdminController {
     }
 
     @GetMapping("/get-employee-details/{employeeId}")
-    public ResponseEntity<EmployeeDto> getEmployeeDetails(String employeeId){
+    public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId){
         EmployeeDto employeeDto = centerAdminService.getEmployeeDetails(employeeId);
         return ResponseEntity.ok(employeeDto);
     }

@@ -27,6 +27,9 @@ public class EmployeeDto {
     private Date dateOfBirth;
     private String phoneNumber;
     private String designation;
+    private String nic;
+    private int casualLeave;
+    private int annualLeave;
 }
 
 

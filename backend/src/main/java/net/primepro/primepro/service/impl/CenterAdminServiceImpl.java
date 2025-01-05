@@ -258,18 +258,20 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     public EmployeeDto getEmployeeDetails(String employeeId) {
         EmployeeDto employeeDto = new EmployeeDto();
         try{
-            Employee employee = employeeRepository.findByEmployeeId(employeeId);
-            employeeDto.setEmployeeId(employee.getEmployeeId());
-            employeeDto.setEmail(employee.getUser().getEmail());
-            employeeDto.setName(employee.getUser().getName());
-            employeeDto.setCity(employee.getUser().getCity());
-            employeeDto.setRole(employee.getUser().getRole());
-            employeeDto.setProfilePictureUrl(employee.getUser().getProfilePictureUrl());
-            employeeDto.setUserActivated(employee.getUser().isUserActivated());
-            employeeDto.setBranchName(employee.getBranchName());
-            employeeDto.setDateOfBirth(employee.getDateOfBirth());
-            employeeDto.setPhoneNumber(employee.getPhoneNumber());
-            employeeDto.setDesignation(employee.getDesignation());
+            Integer empId = Integer.parseInt(employeeId);
+            Object[] employee = (Object[]) employeeRepository.findByEmployeeId(empId);
+            if(employee != null && employee.length > 0) {
+                employeeDto.setName((String) employee[0]);
+                employeeDto.setEmail((String) employee[1]);
+                employeeDto.setCity((String) employee[2]);
+                employeeDto.setPhoneNumber((String) employee[3]);
+                employeeDto.setDesignation((String) employee[4]);
+                employeeDto.setPhoneNumber((String) employee[5]);
+                employeeDto.setNic((String) employee[6]);
+                employeeDto.setDateOfBirth((Date) employee[7]);
+                employeeDto.setAnnualLeave((int) employee[8]);
+                employeeDto.setCasualLeave((int) employee[9]);
+            }
         } catch (Exception e){
             System.out.println("getEmployeeDetails | error :" +e.getMessage());
         }
