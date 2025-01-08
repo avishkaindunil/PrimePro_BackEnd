@@ -23,31 +23,9 @@ public class Complaints {
     private Integer complaintId;
     private Integer UserID;
     private String complaint;
+    private String mobile;
 
     public Complaints() {
     }
 
-    public Integer getComplaintId() {
-        return complaintId;
-    }
-
-    public void setComplaintId(Integer complaintId) {
-        this.complaintId = complaintId;
-    }
-
-    public Integer getUserID() {
-        return UserID;
-    }
-
-    public void setUserID(Integer userID) {
-        UserID = userID;
-    }
-
-    public String getComplaint() {
-        return complaint;
-    }
-
-    public void setComplaint(String complaint) {
-        this.complaint = complaint;
-    }
 }

@@ -29,6 +29,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         newComplaint.setComplaintId(complaints.getComplaintId());
         newComplaint.setUserID(complaints.getUserID());
         newComplaint.setComplaint(complaints.getComplaint());
+        newComplaint.setMobile(complaints.getMobile());
 
         Complaints savedComplaint = complaintRepo.save(newComplaint);
 
@@ -37,7 +38,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public void deleteComplaint(Integer integer) {
-            complaintRepo.deleteById(integer);
+        complaintRepo.deleteById(integer);
 
     }
 
@@ -51,12 +52,13 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 //            Complaints  newComplaint = new Complaints();
 
-            complaints.setUserID(complaints.getUserID());
-            complaints.setComplaint(complaints.getComplaint());
-            complaints.setComplaintId(integer);
+        complaints.setUserID(complaints.getUserID());
+        complaints.setComplaint(complaints.getComplaint());
+        complaints.setComplaintId(integer);
+        complaints.setMobile(complaints.getMobile());
 
-             Complaints updatedComplaint = complaintRepo.save(complaints);
-            return updatedComplaint;
+        Complaints updatedComplaint = complaintRepo.save(complaints);
+        return updatedComplaint;
 
     }
 
