@@ -3,8 +3,10 @@ package net.primepro.primepro.service.impl;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.dto.EmployeeSummaryDto;
 import net.primepro.primepro.entity.Attendance;
+import net.primepro.primepro.entity.CenterAdmin;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.repository.AttendanceRepository;
+import net.primepro.primepro.repository.CenterAdminRepository;
 import net.primepro.primepro.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,12 @@ public class EmployeeReportServiceImpl {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
+    @Autowired
+    private CenterAdminRepository centerAdminRepository;
+
     public List<EmployeeSummaryDto> getEmployeeSummaries() {
         return employeeRepository.findAll().stream().map(employee -> new EmployeeSummaryDto(
-                employee.getEmployeeId(),
+                employee.getId().toString(),
                 employee.getBranchName(),
                 employee.getDesignation(),
                 employee.getPhoneNumber(),
@@ -55,6 +60,11 @@ public class EmployeeReportServiceImpl {
                 .mapToInt(Employee::getBaseSalary)
                 .average().orElse(0.0);
 
+         System.out.println("salarybrackets"+salaryBrackets);
+         System.out.println("avgSalary"+avgSalary);
+
+
+
         return Map.of(
                 "salaryBrackets", salaryBrackets,
                 "averageSalary", avgSalary
@@ -64,9 +74,12 @@ public class EmployeeReportServiceImpl {
     public Map<String, Object> getAttendanceSummary(Optional<String> dateRange, Optional<String> employeeId) {
         List<Attendance> attendances = attendanceRepository.findAll();
 
+
         // Apply filtering based on date range and employee
         if (dateRange.isPresent()) {
             String[] dates = dateRange.get().split(" to ");
+            System.out.println("dates[0] "+ dates[0]);
+            System.out.println("dates[1] "+ dates[1]);
             LocalDate start = LocalDate.parse(dates[0]);
             LocalDate end = LocalDate.parse(dates[1]);
             attendances = attendances.stream()
@@ -75,13 +88,22 @@ public class EmployeeReportServiceImpl {
         }
         if (employeeId.isPresent()) {
             attendances = attendances.stream()
-                    .filter(a -> a.getEmployee().getEmployeeId().equals(employeeId.get()))
+                    .filter(a -> a.getEmployee() != null && a.getEmployee().getId() != null && a.getEmployee().getId().toString().equals(employeeId.get()))
                     .collect(Collectors.toList());
         }
 
+        System.out.println("attendences "+attendances);
         long totalDays = attendances.size();
         long presentDays = attendances.stream().filter(a -> a.getCheckInTime() != null).count();
         double attendancePercentage = (double) presentDays / totalDays * 100;
+
+//        long totalDays =  20;
+//        long presentDays = 17;
+//        double attendancePercentage = (double) presentDays / totalDays * 100;
+
+        System.out.println("totalDays "+totalDays);
+        System.out.println("presentDays "+ presentDays);
+        System.out.println("attendancePercentage "+ attendancePercentage);
 
         return Map.of(
                 "totalDays", totalDays,
@@ -124,10 +146,10 @@ public class EmployeeReportServiceImpl {
     }
 
 
+     public List<CenterAdmin> getAllCenters(){
+        return  centerAdminRepository.findAll();
+    }
 
-
-
-
-
+//    2024-01-01 to 2024-12-31
 
 }

@@ -27,6 +27,17 @@ public class Booking {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 //    public Integer getBookingId() {
 //        return bookingId;
 //    }

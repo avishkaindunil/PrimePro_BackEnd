@@ -2,6 +2,7 @@ package net.primepro.primepro.controller;
 
 
 import net.primepro.primepro.dto.EmployeeSummaryDto;
+import net.primepro.primepro.entity.CenterAdmin;
 import net.primepro.primepro.service.impl.EmployeeReportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,11 @@ public class ReportController {
     public ResponseEntity<Map<String, Object>> getLeaveUsageSummary() {
         return ResponseEntity.ok(employeeReportService.getLeaveUsageSummary());
     }
+
+    @GetMapping("/get-all-centers")
+    public ResponseEntity<List<CenterAdmin>> getAllCenters(){
+        return ResponseEntity.ok(employeeReportService.getAllCenters());
+    }
+
 
 }
