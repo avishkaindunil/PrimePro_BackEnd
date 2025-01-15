@@ -7,6 +7,7 @@ import net.primepro.primepro.dto.TaskDto;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.CenterAdmin;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.entity.LeaveRequest;
 import net.primepro.primepro.response.BookingResponse;
 import net.primepro.primepro.response.LoginResponse;
 
@@ -40,6 +41,6 @@ public interface CenterAdminService {
 
     // New development
     List<Booking> getBookingsWithoutTimeAllocation();
-
     Booking allocateTime(Integer bookingId, Time time);
+    List<Booking> getBookingsWithoutTaskAssigned();
 }

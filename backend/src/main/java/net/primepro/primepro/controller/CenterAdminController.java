@@ -7,6 +7,7 @@ import net.primepro.primepro.dto.LoginDto;
 import net.primepro.primepro.dto.TaskDto;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.entity.LeaveRequest;
 import net.primepro.primepro.response.BookingResponse;
 import net.primepro.primepro.response.LoginResponse;
 import net.primepro.primepro.service.CenterAdminService;
@@ -30,7 +31,7 @@ public class CenterAdminController {
     private EmployeeService employeeService;
 
     @GetMapping("/get-center/{centerId}")
-    public String getCenter(@PathVariable int centerId){
+    public String getCenter(@PathVariable int centerId) {
         return centerAdminService.getCenter(centerId);
     }
 
@@ -58,37 +59,32 @@ public class CenterAdminController {
         return ResponseEntity.ok(todayBookings);
     }
 
-    @GetMapping("/get-All-employees")
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
-        List<EmployeeDto> employeeList = centerAdminService.getAllEmployees();
-        return ResponseEntity.ok(employeeList);
-    }
-
     @GetMapping("/get-employee-details/{employeeId}")
-    public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId){
+    public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId) {
         EmployeeDto employeeDto = centerAdminService.getEmployeeDetails(employeeId);
         return ResponseEntity.ok(employeeDto);
     }
 
     @GetMapping("/get-workload-progress")
-    public ResponseEntity<List<?>> getWorkLoadProgress(){
+    public ResponseEntity<List<?>> getWorkLoadProgress() {
         List<?> bookingList = centerAdminService.getWorkLoadProgress();
         return ResponseEntity.ok(bookingList);
     }
 
-    @PostMapping("/assign-tasks")
-    public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto){
-        String responseMzg = centerAdminService.assignTasks(taskDto);
-        return ResponseEntity.ok(responseMzg);
-    }
-
     @GetMapping("/get-today-all-bookings")
-    public ResponseEntity<List<BookingResponse>> getTodayAllBookings(){
+    public ResponseEntity<List<BookingResponse>> getTodayAllBookings() {
         List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
         return ResponseEntity.ok(bookingResponses);
     }
 
-    // New Development
+    // -------------------------  New Development ---------------------------------- //
+
+    @GetMapping("/get-All-employees")
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> employeeList = centerAdminService.getAllEmployees();
+        return ResponseEntity.ok(employeeList);
+    }
+
     @GetMapping("/not-time-allocated")
     public ResponseEntity<List<Booking>> getBookingsWithoutTimeAllocation() {
         List<Booking> bookings = centerAdminService.getBookingsWithoutTimeAllocation();
@@ -100,12 +96,23 @@ public class CenterAdminController {
             @PathVariable Integer bookingId,
             @RequestParam String startTime) {
         try {
-            // Convert string time to SQL Time
             Time time = Time.valueOf(startTime + ":00");
             Booking updatedBooking = centerAdminService.allocateTime(bookingId, time);
             return ResponseEntity.ok(updatedBooking);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("/not-task-assigned")
+    ResponseEntity<List<Booking>> getBookingsWithoutTaskAssigned(){
+        List<Booking> bookings = centerAdminService.getBookingsWithoutTaskAssigned();
+        return ResponseEntity.ok(bookings);
+    }
+
+    @PostMapping("/assign-tasks")
+    public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto) {
+        String responseMzg = centerAdminService.assignTasks(taskDto);
+        return ResponseEntity.ok(responseMzg);
     }
 }

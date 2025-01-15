@@ -25,6 +25,7 @@ public class Booking {
     private String service;
     private boolean isTaskAssigned;
     private boolean isTimeConfirmed;
+    private boolean isTimeAllocated;
     public Booking() {
     }
 }

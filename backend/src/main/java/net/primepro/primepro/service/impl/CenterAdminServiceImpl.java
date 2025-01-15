@@ -36,6 +36,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     @Autowired private BookingRepo bookingRepo;
     @Autowired private EmployeeRepository employeeRepository;
     @Autowired private TaskRepository taskRepository;
+    @Autowired private LeaveRequestRepository leaveRequestRepository;
 
 
     @Override
@@ -291,7 +292,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     @Transactional
     @Override
     public String assignTasks(TaskDto taskDto) {
-        String responseMsz = null;
+        String responseMsg = null;
         try {
             Task task = new Task();
             task.setTaskStatus(String.valueOf(BookingStatusEnum.ACCEPTED));
@@ -299,19 +300,16 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             Optional<Employee> employee =  employeeRepository.findById(taskDto.getEmployeeId());
             task.setBooking(booking.get());
             task.setTaskDescription(taskDto.getTaskDescription());
-            task.setTaskDate(taskDto.getTaskDate());
-            task.setStartTime(taskDto.getStartTime());
-            task.setEndTime(taskDto.getEndTime());
             task.setCustomerId(taskDto.getCustomerId());
             task.setEmployee(employee.get());
             taskRepository.save(task);
 
             bookingRepo.updateTaskStatus(true, taskDto.getBookingId());
-            responseMsz = "SUCCESS";
+            responseMsg = "SUCCESS";
         } catch (Exception e){
             System.out.println("assignTasks | error : " + e.getMessage());
         }
-        return responseMsz;
+        return responseMsg;
     }
 
     @Override
@@ -320,7 +318,8 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     }
 
 
-    // New development
+    // --------------------------- New development ------------------------------- //
+
     public List<Booking> getBookingsWithoutTimeAllocation() {
         return centerAdminRepository.findBookingsWithoutTimeAllocation();
     }
@@ -330,10 +329,14 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         if (bookingOptional.isEmpty()) {
             throw new IllegalArgumentException("Booking not found with id: " + bookingId);
         }
-
         Booking booking = bookingOptional.get();
         booking.setTime(startTime);
-        booking.setTimeConfirmed(true);
+        booking.setTimeAllocated(true);
         return bookingRepo.save(booking);
+    }
+
+    @Override
+    public List<Booking> getBookingsWithoutTaskAssigned() {
+        return centerAdminRepository.findBookingsWithoutTaskAssigned();
     }
 }

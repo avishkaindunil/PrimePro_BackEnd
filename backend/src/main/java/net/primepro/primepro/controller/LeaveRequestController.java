@@ -34,10 +34,16 @@ public class LeaveRequestController {
         return ResponseEntity.ok(leaveRequests);
     }
 
-    @PostMapping("/approve")
+    @PostMapping("/leave-action")
     public ResponseEntity<LeaveRequest> approveLeaveRequest(@RequestBody LeaveRequestDto leaveRequestDto) {
         LeaveRequest leaveRequest = leaveRequestService.approveLeaveRequest(leaveRequestDto.getLeaveRequestId(), leaveRequestDto.getIsApproved());
         return ResponseEntity.ok(leaveRequest);
+    }
+
+    // Changes by Shanika
+    @GetMapping("/leave-requests")
+    public ResponseEntity<List<LeaveRequestDto>> getLeaveRequests(){
+        return ResponseEntity.ok(leaveRequestService.getLeaveRequests());
     }
 
 }

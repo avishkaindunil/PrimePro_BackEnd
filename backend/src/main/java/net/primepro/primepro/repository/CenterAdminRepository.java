@@ -21,6 +21,9 @@ public interface CenterAdminRepository extends JpaRepository<CenterAdmin,Integer
     String findCenterName(int centerId);
 
     // New development
-    @Query("SELECT b FROM Booking b WHERE b.isTimeConfirmed = false OR b.isTimeConfirmed IS NULL")
+    @Query("SELECT b FROM Booking b WHERE b.isTimeAllocated = false")
     List<Booking> findBookingsWithoutTimeAllocation();
+
+    @Query("SELECT b FROM Booking b WHERE b.isTimeAllocated = true AND b.isTimeConfirmed = true AND b.isTaskAssigned = false")
+    List<Booking> findBookingsWithoutTaskAssigned();
 }
