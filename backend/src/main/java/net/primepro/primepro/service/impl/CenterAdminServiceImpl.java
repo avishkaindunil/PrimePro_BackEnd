@@ -66,16 +66,30 @@ public class CenterAdminServiceImpl implements CenterAdminService {
 
     @Override
     public CenterAdminDto addCenterAdmin(CenterAdminDto centerAdminDto) {
+        OurUsers user = new OurUsers();
+        user.setEmail(centerAdminDto.getEmail());
+        user.setPassword(passwordEncoder.encode(centerAdminDto.getPassword())); // Encode password
+        user.setRole(UserTypesEnum.ADMIN);
+
+        usersRepo.save(user);
+
+
         //    CenterAdmin centerAdmin = CenterAdminMapper.mapToCenterAdmin(centerAdminDto, passwordEncoder);
-        CenterAdmin centerAdmin = new CenterAdmin();
+        CenterAdmin centerAdmin = new CenterAdmin(user.getId());
         centerAdmin.setUser(centerAdminDto.getOurUsers());
-        centerAdmin.setCenterName(centerAdminDto.getUsername());
+        centerAdmin.setUsername(centerAdminDto.getUsername());
+        centerAdmin.setCenterName(centerAdminDto.getCenterName());
         centerAdmin.setPassword(passwordEncoder.encode(centerAdminDto.getPassword()));
         centerAdmin.setEmail(centerAdminDto.getEmail());
+        centerAdmin.setBRNo(centerAdminDto.getBRNo());
+        centerAdmin.setAddress(centerAdminDto.getAddress());
+        centerAdmin.setPhoneNo(centerAdminDto.getPhoneNo());
 
         CenterAdmin savedOne = centerAdminRepository.save(centerAdmin);
         return CenterAdminMapper.mapToCenterAdminDto(savedOne);
     }
+
+
 
     @Override
     public void deleteCenterAdmin(Integer centerAdminId) {
@@ -210,7 +224,6 @@ public class CenterAdminServiceImpl implements CenterAdminService {
 
                 // Compare only the date parts (ignoring time)
                 if (bookingLocalDate.equals(currentLocalDate)) {
-//                    BookingResponse bookingResponse = new BookingResponse();
 //                    bookingResponse.setBookingId((Integer) result[0]);
 //                    bookingResponse.setCenterName((String) result[1]);
 //                    bookingResponse.setUserId((Integer) result[2]);

@@ -25,6 +25,9 @@ public class Complaints {
     private String complaint;
     private String mobile;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isResolved;
+
     public Complaints() {
     }
 

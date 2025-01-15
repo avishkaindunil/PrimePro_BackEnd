@@ -12,13 +12,20 @@ import net.primepro.primepro.entity.OurUsers;
 public class CenterAdminDto {
     private Integer id;
     private String username;
+    private String centerName;
+    private String address;
     private String password;
     private String email;
     private OurUsers ourUsers;
+    private String BRNo;
+    private String PhoneNo;
 
-
-    public CenterAdminDto(Integer id, String username, String email, String centerName) {
+    public CenterAdminDto(Integer id, String username, String email, String centerName, String address, String phoneNo) {
     }
+
+
+//    public CenterAdminDto(Integer id, String username, String email, String centerName) {
+//    }
 }
 //    public CenterAdminDto(Integer id, String username, String email, String centerName) {
 //    }

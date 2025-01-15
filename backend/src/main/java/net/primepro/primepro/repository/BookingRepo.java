@@ -28,4 +28,8 @@ public interface BookingRepo extends JpaRepository<Booking,Integer> {
     @Modifying
     @Query(value = "UPDATE booking SET is_task_assigned = ? where booking_id = ?", nativeQuery = true)
     void updateTaskStatus(boolean b, int bookingId);
+
+
+    @Query("SELECT b.centerName, COUNT(b) FROM Booking b WHERE EXTRACT(WEEK FROM b.date) = EXTRACT(WEEK FROM CURRENT_DATE) GROUP BY b.centerName")
+    List<Object[]> getBookingsCountForCurrentWeek();
 }

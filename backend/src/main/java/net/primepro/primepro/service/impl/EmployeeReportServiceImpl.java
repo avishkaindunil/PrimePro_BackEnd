@@ -94,7 +94,7 @@ public class EmployeeReportServiceImpl {
 
         System.out.println("attendences "+attendances);
         long totalDays = attendances.size();
-        long presentDays = attendances.stream().filter(a -> a.getCheckInTime() != null).count();
+        long presentDays = attendances.stream().filter(a -> a.isApproved()).count();
         double attendancePercentage = (double) presentDays / totalDays * 100;
 
 //        long totalDays =  20;

@@ -9,5 +9,6 @@ public interface BookingService {
 
     Booking addBooking(Booking booking);
     List<Booking> viewAllBookings();
+    List<Object[]> getBookingsForCurrentWeek();
 
 }

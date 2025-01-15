@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -35,6 +37,17 @@ public class BookingController {
     public List<Booking> view_all_bookings() {
         return bookingService.viewAllBookings();
 
+    }
+
+    @GetMapping("/booking/weekly-progress")
+    public Map<String, Object> getWeeklyBookingProgress() {
+        List<Object[]> results = bookingService.getBookingsForCurrentWeek();
+        Map<String, Integer> bookingCounts = new HashMap<>();
+
+        for (Object[] row : results) {
+            bookingCounts.put((String) row[0], ((Long) row[1]).intValue());
+        }
+        return Map.of("data", bookingCounts);
     }
 
 
