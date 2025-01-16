@@ -1,10 +1,7 @@
 package net.primepro.primepro.controller;
 
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.TaskDto;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.LeaveRequest;
@@ -124,5 +121,17 @@ public class CenterAdminController {
     public ResponseEntity<List<Booking>> getAllBookings() {
         List<Booking> allBookings = centerAdminService.getAllBookings();
         return ResponseEntity.ok(allBookings);
+    }
+
+    @GetMapping("/get-employee-perform")
+    ResponseEntity<List<EmpPerformDto>> getEmployeePerform(){
+        List<EmpPerformDto> empPerformList = centerAdminService.getEmployeePerform();
+        return ResponseEntity.ok(empPerformList);
+    }
+
+    @GetMapping("/get-task-distribution")
+    ResponseEntity<List<TaskDisDto>> getTaskDistribution(){
+        List<TaskDisDto> taskDistributions = centerAdminService.getTaskDistribution();
+        return ResponseEntity.ok(taskDistributions);
     }
 }
