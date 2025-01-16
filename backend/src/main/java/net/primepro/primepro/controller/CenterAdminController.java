@@ -47,12 +47,6 @@ public class CenterAdminController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @GetMapping("/get-all-bookings")
-    public ResponseEntity<List<BookingResponse>> getAllBookings() {
-        List<BookingResponse> allBookings = centerAdminService.getAllBookings();
-        return ResponseEntity.ok(allBookings);
-    }
-
 //    @GetMapping("/get-today-bookings")
 //    public ResponseEntity<List<Booking>> getTodayBookings() {
 //        List<Booking> todayBookings = centerAdminService.getTodayBookings();
@@ -98,6 +92,16 @@ public class CenterAdminController {
         }
     }
 
+    @PostMapping("/cant-allocate-time/{bookingId}")
+    public ResponseEntity<Booking> allocateTime(
+            @PathVariable Integer bookingId) {
+        try {
+            Booking updatedBooking = centerAdminService.cantAllocateTime(bookingId);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
     @GetMapping("/not-task-assigned")
     ResponseEntity<List<Booking>> getBookingsWithoutTaskAssigned(){
         List<Booking> bookings = centerAdminService.getBookingsWithoutTaskAssigned();
@@ -114,5 +118,11 @@ public class CenterAdminController {
     public ResponseEntity<List<?>> getWorkLoadProgress() {
         List<?> bookingList = centerAdminService.getWorkLoadProgress();
         return ResponseEntity.ok(bookingList);
+    }
+
+    @GetMapping("/get-all-bookings")
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> allBookings = centerAdminService.getAllBookings();
+        return ResponseEntity.ok(allBookings);
     }
 }

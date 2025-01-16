@@ -24,8 +24,6 @@ public interface CenterAdminService {
     CenterAdminDto editCenterAdmin(CenterAdminDto centerAdminDto);
     List<CenterAdmin> viewAll();
 
-    List<BookingResponse> getAllBookings();
-
 //    List<Booking> getTodayBookings();
     List<BookingResponse> getTodayAllBookings();
 
@@ -42,5 +40,7 @@ public interface CenterAdminService {
     // New development
     List<Booking> getBookingsWithoutTimeAllocation();
     Booking allocateTime(Integer bookingId, Time time);
+    Booking cantAllocateTime(Integer bookingId);
     List<Booking> getBookingsWithoutTaskAssigned();
+    List<Booking> getAllBookings();
 }

@@ -26,6 +26,7 @@ public class Booking {
     private boolean isTaskAssigned;
     private boolean isTimeConfirmed;
     private boolean isTimeAllocated;
+    private boolean isAllocatable;
     public Booking() {
     }
 }
