@@ -53,22 +53,16 @@ public class CenterAdminController {
         return ResponseEntity.ok(allBookings);
     }
 
-    @GetMapping("/get-today-bookings")
-    public ResponseEntity<List<Booking>> getTodayBookings() {
-        List<Booking> todayBookings = centerAdminService.getTodayBookings();
-        return ResponseEntity.ok(todayBookings);
-    }
+//    @GetMapping("/get-today-bookings")
+//    public ResponseEntity<List<Booking>> getTodayBookings() {
+//        List<Booking> todayBookings = centerAdminService.getTodayBookings();
+//        return ResponseEntity.ok(todayBookings);
+//    }
 
     @GetMapping("/get-employee-details/{employeeId}")
     public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId) {
         EmployeeDto employeeDto = centerAdminService.getEmployeeDetails(employeeId);
         return ResponseEntity.ok(employeeDto);
-    }
-
-    @GetMapping("/get-workload-progress")
-    public ResponseEntity<List<?>> getWorkLoadProgress() {
-        List<?> bookingList = centerAdminService.getWorkLoadProgress();
-        return ResponseEntity.ok(bookingList);
     }
 
     @GetMapping("/get-today-all-bookings")
@@ -114,5 +108,11 @@ public class CenterAdminController {
     public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto) {
         String responseMzg = centerAdminService.assignTasks(taskDto);
         return ResponseEntity.ok(responseMzg);
+    }
+
+    @GetMapping("/get-workload-progress")
+    public ResponseEntity<List<?>> getWorkLoadProgress() {
+        List<?> bookingList = centerAdminService.getWorkLoadProgress();
+        return ResponseEntity.ok(bookingList);
     }
 }

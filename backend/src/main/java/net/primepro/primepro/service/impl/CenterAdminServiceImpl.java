@@ -136,101 +136,48 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         return bookingsList;
     }
 
-    @Override
-    public List<BookingResponse> getTodayAllBookings() {
-        List<BookingResponse> todayBookings = new ArrayList<>();
-        try{
-            // Get current date (ignoring time)
-            LocalDate localDate = LocalDate.now();
-            Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-            // Convert currentDate to LocalDate for comparison
-            LocalDate currentLocalDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            List<?> bookingList = bookingRepo.getWorkLoadProgress();
-
-            for (Object booking : bookingList) {
-                Object[] result = (Object[]) booking;
-                Date bookingDate = (Date) result[3];
-                // Convert booking date to LocalDate
-                LocalDate bookingLocalDate =  bookingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                // Print out both dates to see the difference
-                System.out.println("Booking Date: " + bookingLocalDate);
-                System.out.println("Current Date: " + currentLocalDate);
-
-                // Compare only the date parts (ignoring time)
-                if (bookingLocalDate.equals(currentLocalDate)) {
-                    BookingResponse bookingResponse = new BookingResponse();
-                    bookingResponse.setBookingId((Integer) result[0]);
-                    bookingResponse.setCenterName((String) result[1]);
-                    bookingResponse.setUserId((Integer) result[2]);
-                    bookingResponse.setDate((Date) result[3]);
-                    bookingResponse.setCarName((String) result[4]);
-                    bookingResponse.setService((String) result[5]);
-                    bookingResponse.setCustomerId((Integer) result[6]);
-                    bookingResponse.setTaskDescription((String) result[7]);
-                    bookingResponse.setTaskDate((Date) result[8]);
-                    bookingResponse.setStartTime((Time) result[9]);
-                    bookingResponse.setEndTime((Time) result[10]);
-                    bookingResponse.setTaskStatus((String) result[11]);
-                    bookingResponse.setEmployeeId((String) result[12]);
-                    todayBookings.add(bookingResponse);
-                }
-            }
-        } catch (Exception e){
-            System.out.println("getTodayBookings | error : " +e.getMessage());
-        }
-        return todayBookings;
-    }
-
-    @Override
-    public List<Booking> getTodayBookings() {
-        List<Booking> todayBookings = new ArrayList<>();
-        try{
-            // Get current date (ignoring time)
-            LocalDate localDate = LocalDate.now();
-            Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-            // Convert currentDate to LocalDate for comparison
-            LocalDate currentLocalDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            List<Booking> bookingList = bookingRepo.findAll();
-
-            for (Booking booking : bookingList) {
-//                Object[] result = (Object[]) booking;
-                Date bookingDate = booking.getDate();
-                // Convert booking date to LocalDate
-                LocalDate bookingLocalDate = bookingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                // Print out both dates to see the difference
-                System.out.println("Booking Date: " + bookingLocalDate);
-                System.out.println("Current Date: " + currentLocalDate);
-
-                // Compare only the date parts (ignoring time)
-                if (bookingLocalDate.equals(currentLocalDate)) {
-//                    BookingResponse bookingResponse = new BookingResponse();
-//                    bookingResponse.setBookingId((Integer) result[0]);
-//                    bookingResponse.setCenterName((String) result[1]);
-//                    bookingResponse.setUserId((Integer) result[2]);
-//                    bookingResponse.setDate((Date) result[3]);
-//                    bookingResponse.setCarName((String) result[4]);
-//                    bookingResponse.setService((String) result[5]);
-//                    bookingResponse.setCustomerId((Integer) result[6]);
-//                    bookingResponse.setTaskDescription((String) result[7]);
-//                    bookingResponse.setTaskDate((Date) result[8]);
-//                    bookingResponse.setStartTime((Time) result[9]);
-//                    bookingResponse.setEndTime((Time) result[10]);
-//                    bookingResponse.setTaskStatus((String) result[11]);
-//                    bookingResponse.setEmployeeId((String) result[12]);
-                    todayBookings.add(booking);
-                }
-            }
-        } catch (Exception e){
-            System.out.println("getTodayBookings | error : " +e.getMessage());
-        }
-        return todayBookings;
-    }
+//    @Override
+//    public List<Booking> getTodayBookings() {
+//        List<Booking> todayBookings = new ArrayList<>();
+//        try{
+//            // Get current date (ignoring time)
+//            LocalDate localDate = LocalDate.now();
+//            Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//            LocalDate currentLocalDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            List<Booking> bookingList = bookingRepo.findAll();
+//
+//            for (Booking booking : bookingList) {
+//                Date bookingDate = booking.getDate();
+//                LocalDate bookingLocalDate = bookingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//
+//                // Print out both dates to see the difference
+//                System.out.println("Booking Date: " + bookingLocalDate);
+//                System.out.println("Current Date: " + currentLocalDate);
+//
+//                // Compare only the date parts (ignoring time)
+//                if (bookingLocalDate.equals(currentLocalDate)) {
+////                    BookingResponse bookingResponse = new BookingResponse();
+////                    bookingResponse.setBookingId((Integer) result[0]);
+////                    bookingResponse.setCenterName((String) result[1]);
+////                    bookingResponse.setUserId((Integer) result[2]);
+////                    bookingResponse.setDate((Date) result[3]);
+////                    bookingResponse.setCarName((String) result[4]);
+////                    bookingResponse.setService((String) result[5]);
+////                    bookingResponse.setCustomerId((Integer) result[6]);
+////                    bookingResponse.setTaskDescription((String) result[7]);
+////                    bookingResponse.setTaskDate((Date) result[8]);
+////                    bookingResponse.setStartTime((Time) result[9]);
+////                    bookingResponse.setEndTime((Time) result[10]);
+////                    bookingResponse.setTaskStatus((String) result[11]);
+////                    bookingResponse.setEmployeeId((String) result[12]);
+//                    todayBookings.add(booking);
+//                }
+//            }
+//        } catch (Exception e){
+//            System.out.println("getTodayBookings | error : " +e.getMessage());
+//        }
+//        return todayBookings;
+//    }
 
     @Override
     public List<EmployeeDto> getAllEmployees() {
@@ -282,7 +229,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     public List<?> getWorkLoadProgress() {
         List<?> bookingsList = new ArrayList<>();
         try{
-            bookingsList = bookingRepo.getWorkLoadProgress();
+            bookingsList = centerAdminRepository.getWorkLoadProgress();
         } catch (Exception e){
             System.out.println("getWorkLoadProgress | error : " + e.getMessage());
         }
@@ -319,7 +266,6 @@ public class CenterAdminServiceImpl implements CenterAdminService {
 
 
     // --------------------------- New development ------------------------------- //
-
     public List<Booking> getBookingsWithoutTimeAllocation() {
         return centerAdminRepository.findBookingsWithoutTimeAllocation();
     }
@@ -338,5 +284,53 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     @Override
     public List<Booking> getBookingsWithoutTaskAssigned() {
         return centerAdminRepository.findBookingsWithoutTaskAssigned();
+    }
+
+    @Override
+    public List<BookingResponse> getTodayAllBookings() {
+        List<BookingResponse> todayBookings = new ArrayList<>();
+        try{
+            // Get current date (ignoring time)
+            LocalDate localDate = LocalDate.now();
+            Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            // Convert currentDate to LocalDate for comparison
+            LocalDate currentLocalDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            List<?> bookingList = centerAdminRepository.getWorkLoadProgress();
+
+            for (Object booking : bookingList) {
+                Object[] result = (Object[]) booking;
+                Date bookingDate = (Date) result[3];
+                // Convert booking date to LocalDate
+                LocalDate bookingLocalDate =  bookingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                // Print out both dates to see the difference
+                System.out.println("Booking Date: " + bookingLocalDate);
+                System.out.println("Current Date: " + currentLocalDate);
+
+                // Compare only the date parts (ignoring time)
+                if (bookingLocalDate.equals(currentLocalDate)) {
+                    BookingResponse bookingResponse = new BookingResponse();
+                    bookingResponse.setBookingId((Integer) result[0]);
+                    bookingResponse.setCenterName((String) result[1]);
+                    bookingResponse.setUserId((Integer) result[2]);
+                    bookingResponse.setDate((Date) result[3]);
+                    bookingResponse.setCarName((String) result[4]);
+                    bookingResponse.setService((String) result[5]);
+                    bookingResponse.setCustomerId((Integer) result[6]);
+                    bookingResponse.setTaskDescription((String) result[7]);
+                    bookingResponse.setTaskDate((Date) result[8]);
+                    bookingResponse.setStartTime((Time) result[9]);
+                    bookingResponse.setEndTime((Time) result[10]);
+                    bookingResponse.setTaskStatus((String) result[11]);
+                    bookingResponse.setEmployeeId((String) result[12]);
+                    todayBookings.add(bookingResponse);
+                }
+            }
+        } catch (Exception e){
+            System.out.println("getTodayBookings | error : " +e.getMessage());
+        }
+        return todayBookings;
     }
 }

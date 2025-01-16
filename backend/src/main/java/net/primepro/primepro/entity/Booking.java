@@ -1,11 +1,11 @@
 package net.primepro.primepro.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,7 +19,7 @@ public class Booking {
     private Integer bookingId;
     private String centerName;
     private Integer UserID;
-    private Date date;
+    private LocalDate date;
     private Time time;
     private String carName;
     private String service;

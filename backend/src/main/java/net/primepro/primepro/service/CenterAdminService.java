@@ -26,7 +26,7 @@ public interface CenterAdminService {
 
     List<BookingResponse> getAllBookings();
 
-    List<Booking> getTodayBookings();
+//    List<Booking> getTodayBookings();
     List<BookingResponse> getTodayAllBookings();
 
     List<EmployeeDto> getAllEmployees();
