@@ -247,8 +247,8 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         }
         Booking booking = bookingOptional.get();
         booking.setTime(startTime);
-        booking.setTimeAllocated(true);
-        booking.setAllocatable(true);
+        booking.setBookingChecked(true);
+        booking.setTimeAllocatable(true);
         return bookingRepo.save(booking);
     }
 
@@ -260,8 +260,8 @@ public class CenterAdminServiceImpl implements CenterAdminService {
         }
         Booking booking = bookingOptional.get();
         booking.setTime(null);
-        booking.setTimeAllocated(true);
-        booking.setAllocatable(false);
+        booking.setBookingChecked(true);
+        booking.setTimeAllocatable(false);
         return bookingRepo.save(booking);
     }
 

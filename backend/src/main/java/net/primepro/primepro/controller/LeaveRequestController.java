@@ -46,4 +46,8 @@ public class LeaveRequestController {
         return ResponseEntity.ok(leaveRequestService.getLeaveRequests());
     }
 
+    @GetMapping("/all-leave-requests")
+    public ResponseEntity<List<LeaveRequestDto>> getAllLeaveRequests(){
+        return ResponseEntity.ok(leaveRequestService.getAllLeaveRequests());
+    }
 }

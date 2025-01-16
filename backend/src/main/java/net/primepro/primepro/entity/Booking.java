@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name= "booking")
@@ -25,8 +24,8 @@ public class Booking {
     private String service;
     private boolean isTaskAssigned;
     private boolean isTimeConfirmed;
-    private boolean isTimeAllocated;
-    private boolean isAllocatable;
+    private boolean isBookingChecked;
+    private boolean isTimeAllocatable;
     public Booking() {
     }
 }

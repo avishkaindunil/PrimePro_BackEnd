@@ -62,4 +62,20 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
             return dto;
         }).toList();
     }
+
+    @Override
+    public List<LeaveRequestDto> getAllLeaveRequests() {
+        List<Object[]> requests = leaveRequestRepository.findAllLeaveRequests();
+        return requests.stream().map(request -> {
+            LeaveRequestDto dto = new LeaveRequestDto();
+            dto.setEmployeeName((String) request[0]);
+            dto.setLeaveRequestId((int) request[1]);
+            dto.setLeaveType((String) request[2]);
+            dto.setStartDate((Date) request[3]);
+            dto.setEndDate((Date) request[4]);
+            dto.setReason((String) request[5]);
+            dto.setIsApproved((String) request[6]);
+            return dto;
+        }).toList();
+    }
 }

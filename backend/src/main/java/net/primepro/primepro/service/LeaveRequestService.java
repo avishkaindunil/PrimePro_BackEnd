@@ -11,4 +11,5 @@ public interface LeaveRequestService {
     LeaveRequest approveLeaveRequest(Integer leaveRequestId, String isApproved);
     List<LeaveRequest> getLeaveRequestsByUserId(Integer userId);
     List<LeaveRequestDto> getLeaveRequests();
+    List<LeaveRequestDto> getAllLeaveRequests();
 }
