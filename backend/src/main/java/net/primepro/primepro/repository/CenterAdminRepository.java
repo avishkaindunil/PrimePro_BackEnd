@@ -47,8 +47,8 @@ public interface CenterAdminRepository extends JpaRepository<CenterAdmin,Integer
             "ORDER BY TO_CHAR(bk.date, 'Day')", nativeQuery = true)
     List<Object[]> getTaskDistribution();
 
-    @Query(value = "select tk.booking_id from task tk where (tk.task_status = 'ACCEPTED' or tk.task_status = 'PENDING') and tk.employee_id = ? " +
-            "ORDER BY tk.booking_id asc LIMIT 1", nativeQuery = true)
+    @Query(value = "select tk.booking_id from task tk JOIN employee em on em.id = tk.employee_id join ourusers ou on ou.id = em.user_id where  em.user_id = ? " +
+            "and (tk.task_status = 'ACCEPTED' or tk.task_status = 'PENDING') ORDER BY tk.booking_id asc LIMIT 1", nativeQuery = true)
     Integer findAllocatedSlotCount(int empId);
 
 }

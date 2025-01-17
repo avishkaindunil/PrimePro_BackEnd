@@ -30,6 +30,7 @@ public class EmployeeDto {
     private String nic;
     private int casualLeave;
     private int annualLeave;
+    private int currentAllocSlot;
 }
 
 

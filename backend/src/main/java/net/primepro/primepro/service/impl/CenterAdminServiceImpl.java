@@ -175,7 +175,6 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             Integer empId = Integer.parseInt(employeeId);
             Object[] employee = (Object[]) employeeRepository.findByEmployeeId(empId);
             Integer allocatedSlot = centerAdminRepository.findAllocatedSlotCount(empId);
-            System.out.println(allocatedSlot);
             if(employee != null && employee.length > 0) {
                 employeeDto.setName((String) employee[0]);
                 employeeDto.setEmail((String) employee[1]);
@@ -187,6 +186,9 @@ public class CenterAdminServiceImpl implements CenterAdminService {
                 employeeDto.setDateOfBirth((Date) employee[7]);
                 employeeDto.setAnnualLeave((int) employee[8]);
                 employeeDto.setCasualLeave((int) employee[9]);
+            }
+            if(allocatedSlot > 0){
+                employeeDto.setCurrentAllocSlot(allocatedSlot);
             }
         } catch (Exception e){
             System.out.println("getEmployeeDetails | error :" +e.getMessage());
