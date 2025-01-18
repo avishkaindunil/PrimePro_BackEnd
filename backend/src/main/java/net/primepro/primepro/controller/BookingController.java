@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +40,26 @@ public class BookingController {
 
     }
 
-    @GetMapping("/booking/weekly-progress")
-    public Map<String, Object> getWeeklyBookingProgress() {
-        List<Object[]> results = bookingService.getBookingsForCurrentWeek();
-        Map<String, Integer> bookingCounts = new HashMap<>();
+    @GetMapping("/booking/progress")
+    public Map<String, Object> getBookingProgress(@RequestParam String filter) {
+        List<Object[]> results;
 
+        if ("week".equalsIgnoreCase(filter)) {
+            results = bookingService.getBookingsForCurrentWeek();
+        } else if ("month".equalsIgnoreCase(filter)) {
+            results = bookingService.getBookingsForCurrentMonth();
+        } else {
+            throw new IllegalArgumentException("Invalid filter. Use 'week' or 'month'.");
+        }
+
+        Map<String, Integer> bookingCounts = new HashMap<>();
         for (Object[] row : results) {
             bookingCounts.put((String) row[0], ((Long) row[1]).intValue());
         }
+
         return Map.of("data", bookingCounts);
     }
+
 
 
 }

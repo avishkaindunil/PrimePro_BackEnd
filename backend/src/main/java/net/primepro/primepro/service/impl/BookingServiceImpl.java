@@ -60,5 +60,10 @@ public class BookingServiceImpl implements BookingService {
     public List<Object[]> getBookingsForCurrentWeek() {
         return bookingRepo.getBookingsCountForCurrentWeek();
     }
+
+    @Override
+    public List<Object[]> getBookingsForCurrentMonth() {
+        return bookingRepo.getBookingsCountForCurrentMonth();
+    }
 }
 
