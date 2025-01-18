@@ -162,7 +162,7 @@ import java.util.Set;
 public class CenterAdmin {
 
     @Id
-     private Integer id;
+    private Integer id;
 
     @Column(name = "username")
     private String username;
@@ -188,10 +188,12 @@ public class CenterAdmin {
     @Column(name = "email")
     private String email;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private OurUsers user;
+
+
 
 //    @Setter
 //    @OneToOne
@@ -209,6 +211,11 @@ public class CenterAdmin {
         this.id = id;
         this.username = username;
         this.email = email;
+    }
+
+    public CenterAdmin(Integer id) {
+        this.id = id;
+
     }
 
     public CenterAdmin(Integer id, String username, String encode, String email) {
