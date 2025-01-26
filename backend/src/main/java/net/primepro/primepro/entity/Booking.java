@@ -24,6 +24,8 @@ public class Booking {
     private boolean isTaskAssigned;
     private Time startTime;
     private Time endTime;
+    private String customer_name;
+    private String vehicle_number;
 
     public Booking() {
     }
