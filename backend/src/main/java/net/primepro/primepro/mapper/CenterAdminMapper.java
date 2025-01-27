@@ -11,7 +11,9 @@ public class CenterAdminMapper {
                 centerAdmin.getId(),
                 centerAdmin.getUsername(),
                 centerAdmin.getEmail(),
-                centerAdmin.getCenterName()
+                centerAdmin.getCenterName(),
+                centerAdmin.getAddress(),
+                centerAdmin.getPhoneNo()
         );
     }
 
