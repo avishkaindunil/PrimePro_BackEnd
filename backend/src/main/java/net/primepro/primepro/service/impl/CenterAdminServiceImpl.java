@@ -221,6 +221,9 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             task.setTaskDescription(taskDto.getTaskDescription());
             task.setCustomerId(taskDto.getCustomerId());
             task.setEmployee(employee.get());
+            task.setTaskDate(taskDto.getTaskDate());
+            task.setStartTime(taskDto.getStartTime());
+            task.setEndTime(taskDto.getEndTime());
             taskRepository.save(task);
 
             bookingRepo.updateTaskStatus(true, taskDto.getBookingId());
@@ -258,9 +261,9 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     }
 
     // --------------------------- New development ------------------------------- //
-    public List<Booking> getBookingsWithoutTimeAllocation() {
-        return centerAdminRepository.findBookingsWithoutTimeAllocation();
-    }
+//    public List<Booking> getBookingsWithoutTimeAllocation() {
+//        return centerAdminRepository.findBookingsWithoutTimeAllocation();
+//    }
 
     public Booking allocateTime(Integer bookingId, Time startTime) {
         Optional<Booking> bookingOptional = bookingRepo.findById(bookingId);
@@ -268,9 +271,9 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             throw new IllegalArgumentException("Booking not found with id: " + bookingId);
         }
         Booking booking = bookingOptional.get();
-        booking.setTime(startTime);
-        booking.setBookingChecked(true);
-        booking.setTimeAllocatable(true);
+//        booking.setTime(startTime);
+//        booking.setBookingChecked(true);
+//        booking.setTimeAllocatable(true);
         return bookingRepo.save(booking);
     }
 
@@ -281,16 +284,16 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             throw new IllegalArgumentException("Booking not found with id: " + bookingId);
         }
         Booking booking = bookingOptional.get();
-        booking.setTime(null);
-        booking.setBookingChecked(true);
-        booking.setTimeAllocatable(false);
+//        booking.setTime(null);
+//        booking.setBookingChecked(true);
+//        booking.setTimeAllocatable(false);
         return bookingRepo.save(booking);
     }
 
-    @Override
-    public List<Booking> getBookingsWithoutTaskAssigned() {
-        return centerAdminRepository.findBookingsWithoutTaskAssigned();
-    }
+//    @Override
+//    public List<Booking> getBookingsWithoutTaskAssigned() {
+//        return centerAdminRepository.findBookingsWithoutTaskAssigned();
+//    }
 
     @Override
     public List<BookingResponse> getTodayAllBookings() {

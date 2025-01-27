@@ -37,10 +37,10 @@ public interface CenterAdminService {
     List<Booking> getBookings();
 
     // New development
-    List<Booking> getBookingsWithoutTimeAllocation();
+//    List<Booking> getBookingsWithoutTimeAllocation();
     Booking allocateTime(Integer bookingId, Time time);
     Booking cantAllocateTime(Integer bookingId);
-    List<Booking> getBookingsWithoutTaskAssigned();
+//    List<Booking> getBookingsWithoutTaskAssigned();
     List<Booking> getAllBookings();
 
     List<EmpPerformDto> getEmployeePerform();

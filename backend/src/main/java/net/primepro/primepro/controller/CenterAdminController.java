@@ -73,11 +73,11 @@ public class CenterAdminController {
         return ResponseEntity.ok(employeeList);
     }
 
-    @GetMapping("/not-time-allocated")
-    public ResponseEntity<List<Booking>> getBookingsWithoutTimeAllocation() {
-        List<Booking> bookings = centerAdminService.getBookingsWithoutTimeAllocation();
-        return ResponseEntity.ok(bookings);
-    }
+//    @GetMapping("/not-time-allocated")
+//    public ResponseEntity<List<Booking>> getBookingsWithoutTimeAllocation() {
+//        List<Booking> bookings = centerAdminService.getBookingsWithoutTimeAllocation();
+//        return ResponseEntity.ok(bookings);
+//    }
 
     @PostMapping("/allocate-time/{bookingId}")
     public ResponseEntity<Booking> allocateTime(
@@ -102,11 +102,11 @@ public class CenterAdminController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-    @GetMapping("/not-task-assigned")
-    ResponseEntity<List<Booking>> getBookingsWithoutTaskAssigned(){
-        List<Booking> bookings = centerAdminService.getBookingsWithoutTaskAssigned();
-        return ResponseEntity.ok(bookings);
-    }
+//    @GetMapping("/not-task-assigned")
+//    ResponseEntity<List<Booking>> getBookingsWithoutTaskAssigned(){
+//        List<Booking> bookings = centerAdminService.getBookingsWithoutTaskAssigned();
+//        return ResponseEntity.ok(bookings);
+//    }
 
     @PostMapping("/assign-tasks")
     public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto) {
