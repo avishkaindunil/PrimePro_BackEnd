@@ -31,7 +31,7 @@ public interface CenterAdminRepository extends JpaRepository<CenterAdmin,Integer
 
     @Query(
             value =
-                    "SELECT bk.booking_id, bk.center_name, bk.userid , bk.date, bk.time, bk.car_name, bk.service, tk.customer_id, tk.task_description, " +
+                    "SELECT bk.booking_id, bk.center_name, bk.userid , bk.date, bk.start_time, bk.end_time, bk.car_name, bk.service, tk.customer_id, tk.task_description, " +
                             "tk.task_status, em.employee_id, ou.name FROM booking bk JOIN task tk ON bk.booking_id = tk.booking_id " +
                             "JOIN employee em ON tk.employee_id = em.id join ourusers ou on ou.id = em.user_id where bk.date = CURRENT_DATE ",
             nativeQuery = true)
