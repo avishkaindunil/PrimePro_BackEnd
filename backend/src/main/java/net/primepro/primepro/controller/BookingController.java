@@ -46,6 +46,7 @@ public class BookingController {
 
         if ("week".equalsIgnoreCase(filter)) {
             results = bookingService.getBookingsForCurrentWeek();
+            System.out.println("results"+results);
         } else if ("month".equalsIgnoreCase(filter)) {
             results = bookingService.getBookingsForCurrentMonth();
         } else {
