@@ -21,7 +21,12 @@ public class Booking {
     private Date date;
     private String carName;
     private String service;
-    private boolean isTaskAssigned;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isTaskAssigned  = false;
+    private Time startTime;
+    private Time endTime;
+    private String customer_name;
+    private String vehicle_number;
 
     public Booking() {
     }
