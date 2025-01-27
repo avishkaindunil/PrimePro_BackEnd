@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -188,47 +189,29 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     @Override
     public List<Booking> getTodayBookings() {
         List<Booking> todayBookings = new ArrayList<>();
-        try{
+        try {
             // Get current date (ignoring time)
-            LocalDate localDate = LocalDate.now();
-            Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            LocalDate currentLocalDate = LocalDate.now();  // No need for conversion here
 
-            // Convert currentDate to LocalDate for comparison
-            LocalDate currentLocalDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
+            // Fetch all bookings
             List<Booking> bookingList = bookingRepo.findAll();
 
+            // Iterate through each booking and filter by today's date
             for (Booking booking : bookingList) {
-//                Object[] result = (Object[]) booking;
-                Date bookingDate = booking.getDate();
-                // Convert booking date to LocalDate
-                LocalDate bookingLocalDate = bookingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                // Get the booking date (assuming it's already a LocalDate)
+                LocalDate bookingDate = booking.getDate();
 
-                // Print out both dates to see the difference
-                System.out.println("Booking Date: " + bookingLocalDate);
+                // Print out both dates to see the difference (for debugging)
+                System.out.println("Booking Date: " + bookingDate);
                 System.out.println("Current Date: " + currentLocalDate);
 
                 // Compare only the date parts (ignoring time)
-                if (bookingLocalDate.equals(currentLocalDate)) {
-//                    BookingResponse bookingResponse = new BookingResponse();
-//                    bookingResponse.setBookingId((Integer) result[0]);
-//                    bookingResponse.setCenterName((String) result[1]);
-//                    bookingResponse.setUserId((Integer) result[2]);
-//                    bookingResponse.setDate((Date) result[3]);
-//                    bookingResponse.setCarName((String) result[4]);
-//                    bookingResponse.setService((String) result[5]);
-//                    bookingResponse.setCustomerId((Integer) result[6]);
-//                    bookingResponse.setTaskDescription((String) result[7]);
-//                    bookingResponse.setTaskDate((Date) result[8]);
-//                    bookingResponse.setStartTime((Time) result[9]);
-//                    bookingResponse.setEndTime((Time) result[10]);
-//                    bookingResponse.setTaskStatus((String) result[11]);
-//                    bookingResponse.setEmployeeId((String) result[12]);
+                if (bookingDate.equals(currentLocalDate)) {
                     todayBookings.add(booking);
                 }
             }
-        } catch (Exception e){
-            System.out.println("getTodayBookings | error : " +e.getMessage());
+        } catch (Exception e) {
+            System.out.println("getTodayBookings | error : " + e.getMessage());
         }
         return todayBookings;
     }
@@ -319,5 +302,26 @@ public class CenterAdminServiceImpl implements CenterAdminService {
        return centerAdminRepository.findCenterName(centerId);
     }
 
+    @Override
+    public List<Booking> getBookings() {
+        try {
+            List<Booking> allBookings = bookingRepo.findAll();
+
+            LocalDate today = LocalDate.now();
+
+            // Filter the bookings by checking the date and task assignment status
+            return allBookings.stream()
+                    .filter(booking -> {
+                        // Directly compare the LocalDate
+                        return !booking.getDate().isBefore(today) && !booking.isTaskAssigned();
+                    })
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            System.out.println("Error in getBookings: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
 
 }
+

@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/centerAdmin")
@@ -86,4 +89,11 @@ public class CenterAdminController {
         List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
         return ResponseEntity.ok(bookingResponses);
     }
+
+    @GetMapping("/get-today-and-future-bookings")
+    public ResponseEntity<List<Booking>> getTodayAndFutureBookings() {
+        List<Booking> todayBookings = centerAdminService.getBookings();
+        return ResponseEntity.ok(todayBookings);
+    }
+
 }

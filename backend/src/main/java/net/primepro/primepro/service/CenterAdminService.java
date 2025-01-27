@@ -36,4 +36,6 @@ public interface CenterAdminService {
     String assignTasks(TaskDto taskDto);
 
     String getCenter(int centerId);
+
+    List<Booking> getBookings();
 }
