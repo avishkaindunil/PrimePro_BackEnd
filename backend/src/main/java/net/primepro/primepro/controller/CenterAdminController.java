@@ -1,12 +1,10 @@
 package net.primepro.primepro.controller;
 
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.TaskDto;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.Employee;
+import net.primepro.primepro.entity.LeaveRequest;
 import net.primepro.primepro.response.BookingResponse;
 import net.primepro.primepro.response.LoginResponse;
 import net.primepro.primepro.service.CenterAdminService;
@@ -16,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -32,7 +31,7 @@ public class CenterAdminController {
     private EmployeeService employeeService;
 
     @GetMapping("/get-center/{centerId}")
-    public String getCenter(@PathVariable int centerId){
+    public String getCenter(@PathVariable int centerId) {
         return centerAdminService.getCenter(centerId);
     }
 
@@ -48,46 +47,95 @@ public class CenterAdminController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @GetMapping("/get-all-bookings")
-    public ResponseEntity<List<BookingResponse>> getAllBookings() {
-        List<BookingResponse> allBookings = centerAdminService.getAllBookings();
-        return ResponseEntity.ok(allBookings);
-    }
-
-    @GetMapping("/get-today-bookings")
-    public ResponseEntity<List<Booking>> getTodayBookings() {
-        List<Booking> todayBookings = centerAdminService.getTodayBookings();
-        return ResponseEntity.ok(todayBookings);
-    }
-
-    @GetMapping("/get-All-employees")
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
-        List<EmployeeDto> employeeList = centerAdminService.getAllEmployees();
-        return ResponseEntity.ok(employeeList);
-    }
+//    @GetMapping("/get-today-bookings")
+//    public ResponseEntity<List<Booking>> getTodayBookings() {
+//        List<Booking> todayBookings = centerAdminService.getTodayBookings();
+//        return ResponseEntity.ok(todayBookings);
+//    }
 
     @GetMapping("/get-employee-details/{employeeId}")
-    public ResponseEntity<EmployeeDto> getEmployeeDetails(String employeeId){
+    public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId) {
         EmployeeDto employeeDto = centerAdminService.getEmployeeDetails(employeeId);
         return ResponseEntity.ok(employeeDto);
     }
 
-    @GetMapping("/get-workload-progress")
-    public ResponseEntity<List<?>> getWorkLoadProgress(){
-        List<?> bookingList = centerAdminService.getWorkLoadProgress();
-        return ResponseEntity.ok(bookingList);
+    @GetMapping("/get-today-all-bookings")
+    public ResponseEntity<List<BookingResponse>> getTodayAllBookings() {
+        List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    // -------------------------  New Development ---------------------------------- //
+
+    @GetMapping("/get-All-employees")
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> employeeList = centerAdminService.getAllEmployees();
+        return ResponseEntity.ok(employeeList);
+    }
+
+    @GetMapping("/not-time-allocated")
+    public ResponseEntity<List<Booking>> getBookingsWithoutTimeAllocation() {
+        List<Booking> bookings = centerAdminService.getBookingsWithoutTimeAllocation();
+        return ResponseEntity.ok(bookings);
+    }
+
+    @PostMapping("/allocate-time/{bookingId}")
+    public ResponseEntity<Booking> allocateTime(
+            @PathVariable Integer bookingId,
+            @RequestParam String startTime) {
+        try {
+            Time time = Time.valueOf(startTime + ":00");
+            Booking updatedBooking = centerAdminService.allocateTime(bookingId, time);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("/cant-allocate-time/{bookingId}")
+    public ResponseEntity<Booking> allocateTime(
+            @PathVariable Integer bookingId) {
+        try {
+            Booking updatedBooking = centerAdminService.cantAllocateTime(bookingId);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+    @GetMapping("/not-task-assigned")
+    ResponseEntity<List<Booking>> getBookingsWithoutTaskAssigned(){
+        List<Booking> bookings = centerAdminService.getBookingsWithoutTaskAssigned();
+        return ResponseEntity.ok(bookings);
     }
 
     @PostMapping("/assign-tasks")
-    public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto){
+    public ResponseEntity<?> assignTasks(@RequestBody TaskDto taskDto) {
         String responseMzg = centerAdminService.assignTasks(taskDto);
         return ResponseEntity.ok(responseMzg);
     }
 
-    @GetMapping("/get-today-all-bookings")
-    public ResponseEntity<List<BookingResponse>> getTodayAllBookings(){
-        List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
-        return ResponseEntity.ok(bookingResponses);
+    @GetMapping("/get-workload-progress")
+    public ResponseEntity<List<?>> getWorkLoadProgress() {
+        List<?> bookingList = centerAdminService.getWorkLoadProgress();
+        return ResponseEntity.ok(bookingList);
+    }
+
+    @GetMapping("/get-all-bookings")
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> allBookings = centerAdminService.getAllBookings();
+        return ResponseEntity.ok(allBookings);
+    }
+
+    @GetMapping("/get-employee-perform")
+    ResponseEntity<List<EmpPerformDto>> getEmployeePerform(){
+        List<EmpPerformDto> empPerformList = centerAdminService.getEmployeePerform();
+        return ResponseEntity.ok(empPerformList);
+    }
+
+    @GetMapping("/get-task-distribution")
+    ResponseEntity<List<TaskDisDto>> getTaskDistribution(){
+        List<TaskDisDto> taskDistributions = centerAdminService.getTaskDistribution();
+        return ResponseEntity.ok(taskDistributions);
     }
 
     @GetMapping("/get-today-and-future-bookings")
