@@ -157,7 +157,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
                 EmployeeDto employeeDto = new EmployeeDto();
 
                 String employeeName = (String) result[0];
-                int userId = (int) result[1];
+                int userId = (int) result[2];
 
                 employeeDto.setName(employeeName);
                 employeeDto.setId(userId);
@@ -216,7 +216,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
             Task task = new Task();
             task.setTaskStatus(String.valueOf(BookingStatusEnum.ACCEPTED));
             Optional<Booking> booking = bookingRepo.findById(taskDto.getBookingId());
-            Optional<Employee> employee =  employeeRepository.findById(taskDto.getEmployeeId());
+            Optional<Employee> employee =  employeeRepository.findById((int)taskDto.getEmployeeId());
             task.setBooking(booking.get());
             task.setTaskDescription(taskDto.getTaskDescription());
             task.setCustomerId(taskDto.getCustomerId());

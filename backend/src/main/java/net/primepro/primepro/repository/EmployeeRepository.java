@@ -14,6 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
             "employee em on us.id = em.user_id where us.id = :employeeId", nativeQuery = true)
     Object findByEmployeeId(@Param("employeeId") Integer employeeId);
 
-    @Query(value = "select ou.name, em.user_id FROM ourusers ou JOIN employee em ON ou.id = em.user_id", nativeQuery = true)
+    @Query(value = "select ou.name, em.user_id, em.id FROM ourusers ou JOIN employee em ON ou.id = em.user_id", nativeQuery = true)
     List<?> findEmployeeDetails();
 }
