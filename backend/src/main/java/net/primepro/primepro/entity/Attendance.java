@@ -30,6 +30,6 @@ public class Attendance {
     private Time checkOutTime;
     private Integer overtime;
     private Integer workHours;
-    private boolean isApproved;
+    private Integer isApproved;
 
 }

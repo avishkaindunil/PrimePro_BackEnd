@@ -1,5 +1,6 @@
 package net.primepro.primepro.repository;
 
+import net.primepro.primepro.dto.AttendanceNewDTO;
 import net.primepro.primepro.entity.Attendance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,15 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
+
+    @Query("SELECT a FROM Attendance a ORDER BY a.attendanceDate DESC")
+    List<Attendance> findAllByAttendanceDateDesc();
+
+    @Query("SELECT a.id, a.attendanceDate, a.checkInTime, a.checkOutTime, a.isApproved, u.name " +
+            "FROM Attendance a " +
+            "JOIN a.employee e " +
+            "JOIN e.user u " +
+            "ORDER BY a.attendanceDate DESC")
+    List<?> findAllWithUserName();
+
 }

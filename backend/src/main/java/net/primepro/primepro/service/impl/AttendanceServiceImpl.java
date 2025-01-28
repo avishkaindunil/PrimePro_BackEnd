@@ -1,6 +1,8 @@
 package net.primepro.primepro.service.impl;
 
 import net.primepro.primepro.dto.AttendanceDto;
+import net.primepro.primepro.dto.AttendanceNewDTO;
+import net.primepro.primepro.dto.LeaveRequestDto;
 import net.primepro.primepro.dto.TotalHoursResponse;
 import net.primepro.primepro.entity.Attendance;
 import net.primepro.primepro.entity.Employee;
@@ -8,7 +10,7 @@ import net.primepro.primepro.repository.AttendanceRepository;
 import net.primepro.primepro.service.AttendanceService;
 import net.primepro.primepro.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -23,6 +25,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private EmployeeService employeeService;
+
+    public List<AttendanceNewDTO> getAllAttendanceDescending() {
+        List<Object[]> results = (List<Object[]>) attendanceRepository.findAllWithUserName();
+        return results.stream().map(result -> {
+            AttendanceNewDTO dto = new AttendanceNewDTO();
+            dto.setId((Integer) result[0]);
+            dto.setAttendanceDate((LocalDate) result[1]);
+            dto.setCheckInTime((Time) result[2]);
+            dto.setCheckOutTime((Time) result[3]);
+            dto.setIsApproved((Integer) result[4]);
+            dto.setName((String) result[5]);
+            return dto;
+        }).toList();
+    }
 
     @Override
     public Attendance markAttendance(AttendanceDto attendance) {
@@ -54,7 +70,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceData.setCheckOutTime(attendanceDto.getCheckOutTime());
         attendanceData.setWorkHours(attendanceDto.getWorkHours());
         attendanceData.setOvertime(attendanceDto.getOvertime());
-        attendanceData.setApproved(attendanceDto.isApproved());
+        attendanceData.setIsApproved(attendanceDto.getIsApproved());
         attendanceData.setEmployee(employee);
 
         return attendanceRepository.save(attendanceData);
@@ -174,6 +190,24 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setWorkHours((int) workHours);
 
         return attendance;
+    }
+
+    @Override
+    public void approveAttendance(Integer attendanceId, Integer isApproved) {
+        if (attendanceId == null || isApproved == null) {
+            throw new IllegalArgumentException("Attendance ID and approval status must not be null.");
+        }
+
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new IllegalArgumentException("Attendance not found"));
+
+        if (isApproved != 0 && isApproved != 1 && isApproved != 2) {
+            throw new IllegalArgumentException("Invalid status. Use 0 (Pending), 1 (Approved), or 2 (Rejected).");
+        }
+
+        attendance.setIsApproved(isApproved);
+
+        attendanceRepository.save(attendance);
     }
 
 }
