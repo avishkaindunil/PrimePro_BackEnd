@@ -7,18 +7,19 @@ import lombok.Setter;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttendanceDto {
-    private Integer employeeId;
+public class AttendanceNewDTO {
+
+    private Integer id;
     private LocalDate attendanceDate;
+    private String name;
     private Time checkInTime;
     private Time checkOutTime;
-    private Integer overtime;
-    private Integer workHours;
     private Integer isApproved;
+
+
 }
