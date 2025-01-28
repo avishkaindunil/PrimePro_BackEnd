@@ -116,6 +116,11 @@ public class UsersManagementService {
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
                             loginRequest.getPassword()));
             var user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
+
+            if (!user.isUserActivated()) {
+                throw new RuntimeException("User account is not activated. Please contact support.");
+            }
+
             var jwt = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             response.setStatusCode(200);

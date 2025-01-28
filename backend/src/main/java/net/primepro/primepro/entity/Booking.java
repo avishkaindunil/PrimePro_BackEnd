@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -18,10 +19,15 @@ public class Booking {
     private Integer bookingId;
     private String centerName;
     private Integer UserID;
-    private Date date;
+    private LocalDate date;
     private String carName;
     private String service;
-    private boolean isTaskAssigned;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isTaskAssigned  = false;
+    private Time startTime;
+    private Time endTime;
+    private String customer_name;
+    private String vehicle_number;
 
     public Booking() {
     }

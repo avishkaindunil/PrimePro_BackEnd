@@ -35,6 +35,8 @@ public class OurUsers implements UserDetails {
     @Column(columnDefinition = "boolean default true")
     private boolean isUserActivated = true;
 
+    private String mobile;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private CenterAdmin centerAdmin;
