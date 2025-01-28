@@ -2,10 +2,7 @@ package net.primepro.primepro.service;
 
 import jakarta.transaction.Transactional;
 import net.primepro.primepro.constants.UserTypesEnum;
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.ReqRes;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.entity.OurUsers;
 import net.primepro.primepro.entity.SystemAdmin;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsersManagementService {
@@ -291,4 +289,29 @@ public class UsersManagementService {
         return reqRes;
 
     }
+
+    public List<UserDto> getAllUsersExcludingSystemAdmin() {
+        return usersRepo.findAll()
+                .stream()
+                .filter(user -> user.getRole() != UserTypesEnum.SYSTEMADMIN)
+                .map(user -> {
+                    UserDto dto = new UserDto();
+                    dto.setId(user.getId());
+                    dto.setEmail(user.getEmail());
+                    dto.setName(user.getName());
+                    dto.setCity(user.getCity());
+                    dto.setRole(user.getRole());
+                    dto.setUserActivated(user.isUserActivated());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    public void toggleUserActivation(Integer userId) {
+        OurUsers user = usersRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUserActivated(!user.isUserActivated());
+        usersRepo.save(user);
+    }
+
 }

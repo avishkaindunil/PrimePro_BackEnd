@@ -23,6 +23,10 @@ public class Complaints {
     private Integer complaintId;
     private Integer UserID;
     private String complaint;
+    private String mobile;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isResolved;
 
     public Complaints() {
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -60,6 +61,21 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     }
 
+    @Override
+    public List<Complaints> getUnresolvedComplaints() {
+        return complaintRepo.findByIsResolvedFalse();
+    }
 
+    @Override
+    public boolean markAsResolved(Integer id) {
+        Optional<Complaints> complaint = complaintRepo.findById(id);
+        if (complaint.isPresent()) {
+            Complaints updatedComplaint = complaint.get();
+            updatedComplaint.setIsResolved(true);
+            complaintRepo.save(updatedComplaint);
+            return true;
+        }
+        return false;
+    }
 
 }
