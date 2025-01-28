@@ -158,9 +158,11 @@ public class CenterAdminServiceImpl implements CenterAdminService {
 
                 String employeeName = (String) result[0];
                 int userId = (int) result[2];
+                int empId = (int) result[1];
 
                 employeeDto.setName(employeeName);
                 employeeDto.setId(userId);
+                employeeDto.setEmployeeId(String.valueOf(empId));
                 employees.add(employeeDto);
             }
         } catch (Exception e){
