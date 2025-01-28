@@ -5,5 +5,6 @@ public enum UserTypesEnum {
     EMPLOYEE,
     CAR_WASH_CENTER_ADMIN,
     STORE_KEEPER,
-    ADMIN
+    ADMIN,
+    SYSTEMADMIN
 }
