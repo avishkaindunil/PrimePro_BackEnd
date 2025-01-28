@@ -6,6 +6,7 @@ import net.primepro.primepro.entity.Complaints;
 import net.primepro.primepro.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ScopeMetadata;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,21 @@ public class ComplaintController {
 
     }
 
+    @GetMapping("/complaints/get-all-unresolved")
+    public ResponseEntity<List<Complaints>> getAllUnresolvedComplaints() {
+        List<Complaints> unresolvedComplaints = complaintService.getUnresolvedComplaints();
+        return ResponseEntity.ok(unresolvedComplaints);
+    }
+
+    @PutMapping("complaints/resolve/{id}")
+    public ResponseEntity<String> resolveComplaint(@PathVariable Integer id) {
+        boolean updated = complaintService.markAsResolved(id);
+        if (updated) {
+            return ResponseEntity.ok("Complaint resolved successfully.");
+        } else {
+            return ResponseEntity.status(404).body("Complaint not found.");
+        }
+    }
 
 
 }
