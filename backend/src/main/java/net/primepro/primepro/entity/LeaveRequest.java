@@ -1,5 +1,6 @@
 package net.primepro.primepro.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,6 @@ public class LeaveRequest {
     @Column(name = "reason", length = 1000)
     private String reason;
 
-    @Column(name = "is_approved")
-    private boolean isApproved = false;
-
+    @Column(name = "is_approved", nullable = true)
+    private String isApproved;
 }
