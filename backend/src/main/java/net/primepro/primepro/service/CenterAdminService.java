@@ -1,9 +1,6 @@
 package net.primepro.primepro.service;
 
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.TaskDto;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.CenterAdmin;
 import net.primepro.primepro.entity.Employee;
@@ -36,4 +33,7 @@ public interface CenterAdminService {
     String assignTasks(TaskDto taskDto);
 
     String getCenter(int centerId);
+    List<TaskDisDto> getTaskDistribution();
+
+    List<EmpPerformDto> getEmployeePerform();
 }

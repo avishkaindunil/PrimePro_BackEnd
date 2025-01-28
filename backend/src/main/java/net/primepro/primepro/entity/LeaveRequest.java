@@ -36,6 +36,6 @@ public class LeaveRequest {
     private String reason;
 
     @Column(name = "is_approved")
-    private boolean isApproved = false;
+    private String isApproved;
 
 }

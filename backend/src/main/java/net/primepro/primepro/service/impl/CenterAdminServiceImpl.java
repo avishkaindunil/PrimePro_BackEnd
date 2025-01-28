@@ -3,10 +3,7 @@ package net.primepro.primepro.service.impl;
 import lombok.AllArgsConstructor;
 import net.primepro.primepro.constants.BookingStatusEnum;
 import net.primepro.primepro.constants.UserTypesEnum;
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.TaskDto;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.*;
 import net.primepro.primepro.mapper.CenterAdminMapper;
 import net.primepro.primepro.repository.*;
@@ -237,7 +234,7 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> employees = new ArrayList<>();
         try{
-            List<?> employeeList = employeeRepository.findEmployeeDetails();
+            List<?> employeeList = employeeRepository.findAllEmployeeDetails();
             for(Object employee : employeeList){
                 Object[] result = (Object[]) employee;
                 EmployeeDto employeeDto = new EmployeeDto();
@@ -259,18 +256,25 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     public EmployeeDto getEmployeeDetails(String employeeId) {
         EmployeeDto employeeDto = new EmployeeDto();
         try{
-            Employee employee = employeeRepository.findByEmployeeId(employeeId);
-            employeeDto.setEmployeeId(employee.getEmployeeId());
-            employeeDto.setEmail(employee.getUser().getEmail());
-            employeeDto.setName(employee.getUser().getName());
-            employeeDto.setCity(employee.getUser().getCity());
-            employeeDto.setRole(employee.getUser().getRole());
-            employeeDto.setProfilePictureUrl(employee.getUser().getProfilePictureUrl());
-            employeeDto.setUserActivated(employee.getUser().isUserActivated());
-            employeeDto.setBranchName(employee.getBranchName());
-            employeeDto.setDateOfBirth(employee.getDateOfBirth());
-            employeeDto.setPhoneNumber(employee.getPhoneNumber());
-            employeeDto.setDesignation(employee.getDesignation());
+            Integer empId = Integer.parseInt(employeeId);
+            Object[] employee = (Object[]) employeeRepository.findByEmpId(empId);
+            System.out.println(empId);
+            Integer allocatedSlot = centerAdminRepository.findAllocatedSlotCount(empId);
+            if(employee != null && employee.length > 0) {
+                employeeDto.setName((String) employee[0]);
+                employeeDto.setEmail((String) employee[1]);
+                employeeDto.setCity((String) employee[2]);
+                employeeDto.setPhoneNumber((String) employee[3]);
+                employeeDto.setDesignation((String) employee[4]);
+                employeeDto.setPhoneNumber((String) employee[5]);
+                employeeDto.setNic((String) employee[6]);
+                employeeDto.setDateOfBirth((Date) employee[7]);
+                employeeDto.setAnnualLeave((int) employee[8]);
+                employeeDto.setCasualLeave((int) employee[9]);
+            }
+            if(allocatedSlot > 0){
+                employeeDto.setCurrentAllocSlot(allocatedSlot);
+            }
         } catch (Exception e){
             System.out.println("getEmployeeDetails | error :" +e.getMessage());
         }
@@ -317,6 +321,34 @@ public class CenterAdminServiceImpl implements CenterAdminService {
     @Override
     public String getCenter(int centerId) {
        return centerAdminRepository.findCenterName(centerId);
+    }
+
+    @Override
+    public List<TaskDisDto> getTaskDistribution() {
+        List<TaskDisDto> taskDistributions = new ArrayList<>();
+        List<Object[]> tasks = centerAdminRepository.getTaskDistribution();
+
+        for(Object[] result : tasks){
+            TaskDisDto taskDisDto = new TaskDisDto();
+            taskDisDto.setDayOfWeek((String) result[0]);
+            taskDisDto.setCompletedTaskCount((Long) result[1]);
+            taskDistributions.add(taskDisDto);
+        }
+        return taskDistributions;
+    }
+
+    @Override
+    public List<EmpPerformDto> getEmployeePerform() {
+        List<EmpPerformDto> empPerformDtoList = new ArrayList<>();
+        List<Object[]> performList = centerAdminRepository.getEmployeePerform();
+
+        for (Object[] result : performList) {
+            EmpPerformDto empPerformDto = new EmpPerformDto();
+            empPerformDto.setEmployeeName((String) result[0]);
+            empPerformDto.setCount((Long) result[1]);
+            empPerformDtoList.add(empPerformDto);
+        }
+        return empPerformDtoList;
     }
 
 
