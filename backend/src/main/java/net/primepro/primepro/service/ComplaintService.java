@@ -10,4 +10,6 @@ public interface ComplaintService {
     void deleteComplaint(Integer integer);
     List<Complaints> getComplaints();
     Complaints updateComplaint(Integer integer, Complaints complaints);
+    List<Complaints> getUnresolvedComplaints();
+    boolean markAsResolved(Integer id);
 }

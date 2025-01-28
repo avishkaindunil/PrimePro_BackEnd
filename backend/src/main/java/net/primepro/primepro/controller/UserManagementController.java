@@ -1,6 +1,8 @@
 package net.primepro.primepro.controller;
 
 import net.primepro.primepro.dto.LoginDto;
+import net.primepro.primepro.dto.UserDto;
+import net.primepro.primepro.repository.UsersRepo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
@@ -13,10 +15,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @CrossOrigin(origins  = "http://localhost:5173/")
 @RestController
 public class UserManagementController {
+
+    @Autowired
+    private UsersRepo usersRepo;
+
     @Autowired
     private UsersManagementService usersManagementService;
 
@@ -35,15 +43,21 @@ public class UserManagementController {
         return ResponseEntity.ok(usersManagementService.refreshToken(req));
     }
 
-    @GetMapping("/admin/get-all-users")
-    public ResponseEntity<ReqRes> getAllUsers(){
-        return ResponseEntity.ok(usersManagementService.getAllUsers());
-
-    }
+//    @GetMapping("/admin/get-all-users")
+//    public ResponseEntity<ReqRes> getAllUsers(){
+//        return ResponseEntity.ok(usersManagementService.getAllUsers());
+//
+//    }
 
     @GetMapping("/admin/get-users/{userId}")
     public ResponseEntity<ReqRes> getUSerByID(@PathVariable Integer userId){
         return ResponseEntity.ok(usersManagementService.getUsersById(userId));
+    }
+
+    @GetMapping("/admin/get-all-users")
+    public ResponseEntity<List<UserDto>> getAllUsers(){
+        return ResponseEntity.ok(usersManagementService.getAllUsersExcludingSystemAdmin());
+
     }
 
     @PutMapping("/admin/update/{userId}")
@@ -64,6 +78,20 @@ public class UserManagementController {
         return ResponseEntity.ok(usersManagementService.deleteUser(userId));
     }
 
+
+    @PutMapping("/admin/{userId}/toggle-activation")
+    public ResponseEntity<String> toggleUserActivation(@PathVariable Integer userId) {
+        usersManagementService.toggleUserActivation(userId);
+        return ResponseEntity.ok("User activation status updated successfully");
+    }
+
+
+    @GetMapping("/admin/active-count")
+    public ResponseEntity<Long> getActiveUserCount() {
+        long activeUserCount = usersRepo.countByIsUserActivated(true);
+        System.out.println("Active User Count: " + activeUserCount);
+        return ResponseEntity.ok(activeUserCount);
+    }
 
 }
 
