@@ -1,10 +1,7 @@
 package net.primepro.primepro.controller;
 
 import lombok.AllArgsConstructor;
-import net.primepro.primepro.dto.CenterAdminDto;
-import net.primepro.primepro.dto.EmployeeDto;
-import net.primepro.primepro.dto.LoginDto;
-import net.primepro.primepro.dto.TaskDto;
+import net.primepro.primepro.dto.*;
 import net.primepro.primepro.entity.Booking;
 import net.primepro.primepro.entity.Employee;
 import net.primepro.primepro.response.BookingResponse;
@@ -64,7 +61,7 @@ public class CenterAdminController {
     }
 
     @GetMapping("/get-employee-details/{employeeId}")
-    public ResponseEntity<EmployeeDto> getEmployeeDetails(String employeeId){
+    public ResponseEntity<EmployeeDto> getEmployeeDetails(@PathVariable String employeeId) {
         EmployeeDto employeeDto = centerAdminService.getEmployeeDetails(employeeId);
         return ResponseEntity.ok(employeeDto);
     }
@@ -85,5 +82,17 @@ public class CenterAdminController {
     public ResponseEntity<List<BookingResponse>> getTodayAllBookings(){
         List<BookingResponse> bookingResponses = centerAdminService.getTodayAllBookings();
         return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/get-task-distribution")
+    ResponseEntity<List<TaskDisDto>> getTaskDistribution(){
+        List<TaskDisDto> taskDistributions = centerAdminService.getTaskDistribution();
+        return ResponseEntity.ok(taskDistributions);
+    }
+
+    @GetMapping("/get-employee-perform")
+    ResponseEntity<List<EmpPerformDto>> getEmployeePerform(){
+        List<EmpPerformDto> empPerformList = centerAdminService.getEmployeePerform();
+        return ResponseEntity.ok(empPerformList);
     }
 }

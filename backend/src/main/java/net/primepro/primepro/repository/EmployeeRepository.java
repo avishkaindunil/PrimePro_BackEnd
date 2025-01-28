@@ -13,4 +13,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
 
     @Query(value = "select ou.name, em.id FROM ourusers ou JOIN employee em ON ou.id = em.user_id", nativeQuery = true)
     List<?> findEmployeeDetails();
+
+    @Query(value = "select us.name, us.email, us.city, em.phone_number, em.designation, em.nic, em.phone_number, em.date_of_birth, em.no_of_annual_leaves, em.no_of_casual_leaves from ourusers us join\n" +
+            "employee em on us.id = em.user_id where us.id = :employeeId", nativeQuery = true)
+    Object findByEmpId(Integer employeeId);
+
+    @Query(value = "select ou.name, em.user_id FROM ourusers ou JOIN employee em ON ou.id = em.user_id", nativeQuery = true)
+    List<?> findAllEmployeeDetails();
 }
